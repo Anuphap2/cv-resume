@@ -14,7 +14,6 @@ import {
   Paper,
   LinearProgress,
 } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { 
   ArrowBack as ArrowLeftIcon, 
   ArrowForward as ArrowRightIcon, 
@@ -25,16 +24,6 @@ import {
   Star as StarIcon 
 } from '@mui/icons-material';
 import { pdf } from '@react-pdf/renderer';
-
-const lightPreviewTheme = createTheme({
-  palette: {
-    mode: 'light',
-    text: {
-      primary: '#1a1a1a',
-      secondary: '#555555',
-    }
-  }
-});
 
 import ThemeSelector from './ui/ThemeSelector';
 import { useLanguage } from '../i18n';
@@ -52,6 +41,7 @@ import LanguagesStep from './steps/LanguagesStep';
 import ResumePreview from './preview/ResumePreview';
 import CVPreview from './preview/CVPreview';
 import PortfolioPreview from './preview/PortfolioPreview';
+import PaginatedPreview from './preview/PaginatedPreview';
 
 import ResumeClassicPDF from './templates/ResumeClassic';
 import ResumeModernPDF from './templates/ResumeModern';
@@ -146,18 +136,7 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
   const handleExportPDF = async () => {
     setExporting(true);
     try {
-      let PdfComponent;
-      if (docType === 'resume') {
-        PdfComponent = template === 'modern'
-          ? <ResumeModernPDF data={data} accentColor={accentColor} />
-          : <ResumeClassicPDF data={data} accentColor={accentColor} />;
-      } else {
-        PdfComponent = template === 'professional'
-          ? <CVProfessionalPDF data={data} accentColor={accentColor} />
-          : <CVAcademicPDF data={data} accentColor={accentColor} />;
-      }
-
-      const blob = await pdf(PdfComponent).toBlob();
+      const blob = await pdf(pdfDocument).toBlob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -281,6 +260,13 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
   };
 
   const PreviewComponent = docType === 'resume' ? ResumePreview : docType === 'portfolio' ? PortfolioPreview : CVPreview;
+  const pdfDocument = docType === 'resume'
+    ? (template === 'modern'
+      ? <ResumeModernPDF data={data} accentColor={accentColor} />
+      : <ResumeClassicPDF data={data} accentColor={accentColor} />)
+    : (template === 'professional'
+      ? <CVProfessionalPDF data={data} accentColor={accentColor} />
+      : <CVAcademicPDF data={data} accentColor={accentColor} />);
 
   const getDocTypeLabel = () => {
     if (docType === 'resume') return 'Resume';
@@ -393,13 +379,13 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
             </IconButton>
           </Box>
           <Box className="builder-preview-stage">
-            <Paper elevation={0} className={`builder-preview-paper ${docType === 'portfolio' ? 'portfolio-preview-paper' : ''}`}>
+            <Paper elevation={0} className={`builder-preview-paper ${docType === 'portfolio' ? 'portfolio-preview-paper' : 'document-preview-paper'}`}>
               {docType === 'portfolio' ? (
                 <PreviewComponent data={data} accentColor={accentColor} template={template} />
               ) : (
-                <ThemeProvider theme={lightPreviewTheme}>
+                <PaginatedPreview>
                   <PreviewComponent data={data} accentColor={accentColor} template={template} />
-                </ThemeProvider>
+                </PaginatedPreview>
               )}
             </Paper>
           </Box>

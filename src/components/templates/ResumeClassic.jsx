@@ -87,7 +87,8 @@ const createStyles = (accentColor) =>
     skillCategory: {
       fontSize: 9,
       fontFamily: 'Helvetica-Bold',
-      width: 90,
+      width: 125,
+      flexShrink: 0,
       color: '#333',
     },
     skillItems: {

@@ -1,4 +1,4 @@
-export default function CVPreview({ data, accentColor, template }) {
+export default function CVPreview({ data, accentColor, template, pageSections = null, showHeader = true }) {
   const color = accentColor.value;
   const isProfessional = template === "professional";
 
@@ -10,6 +10,7 @@ export default function CVPreview({ data, accentColor, template }) {
       );
     });
   const hasEntryContent = (entry) => Object.values(entry).some((v) => typeof v === 'string' && v.trim() !== '' && v !== entry.id);
+  const showSection = (index) => pageSections === null || pageSections.includes(String(index));
 
   const pi = data.personalInfo;
   const contactItems = [
@@ -24,7 +25,7 @@ export default function CVPreview({ data, accentColor, template }) {
   return (
     <div className="preview-page-inner">
       {/* Header */}
-      <div
+      {showHeader && <div
         className="prev-header"
         style={isProfessional ? { paddingBottom: "10px" } : {}}
       >
@@ -44,11 +45,11 @@ export default function CVPreview({ data, accentColor, template }) {
           </div>
           {pi.photoUrl && <img src={pi.photoUrl} alt="Profile" className="prev-profile-photo" />}
         </div>
-      </div>
+      </div>}
 
       {/* Profile */}
-      {data.profile && (
-        <div className="prev-section">
+      {showSection(0) && data.profile && (
+        <div className="prev-section" data-preview-block="0">
           <div
             className="prev-section-title"
             style={{ borderColor: color, color }}
@@ -60,8 +61,8 @@ export default function CVPreview({ data, accentColor, template }) {
       )}
 
       {/* Education */}
-      {hasContent(data.education) && (
-        <div className="prev-section">
+      {showSection(1) && hasContent(data.education) && (
+        <div className="prev-section" data-preview-block="1">
           <div
             className="prev-section-title"
             style={{ borderColor: color, color }}
@@ -115,8 +116,8 @@ export default function CVPreview({ data, accentColor, template }) {
       )}
 
       {/* Experience */}
-      {hasContent(data.experience) && (
-        <div className="prev-section">
+      {showSection(2) && hasContent(data.experience) && (
+        <div className="prev-section" data-preview-block="2">
           <div
             className="prev-section-title"
             style={{ borderColor: color, color }}
@@ -150,8 +151,8 @@ export default function CVPreview({ data, accentColor, template }) {
       )}
 
       {/* Publications */}
-      {hasContent(data.publications) && (
-        <div className="prev-section">
+      {showSection(3) && hasContent(data.publications) && (
+        <div className="prev-section" data-preview-block="3">
           <div
             className="prev-section-title"
             style={{ borderColor: color, color }}
@@ -181,8 +182,8 @@ export default function CVPreview({ data, accentColor, template }) {
       )}
 
       {/* Research */}
-      {hasContent(data.research) && (
-        <div className="prev-section">
+      {showSection(4) && hasContent(data.research) && (
+        <div className="prev-section" data-preview-block="4">
           <div
             className="prev-section-title"
             style={{ borderColor: color, color }}
@@ -218,8 +219,8 @@ export default function CVPreview({ data, accentColor, template }) {
       )}
 
       {/* Certifications */}
-      {hasContent(data.certifications) && (
-        <div className="prev-section">
+      {showSection(5) && hasContent(data.certifications) && (
+        <div className="prev-section" data-preview-block="5">
           <div
             className="prev-section-title"
             style={{ borderColor: color, color }}
@@ -244,8 +245,8 @@ export default function CVPreview({ data, accentColor, template }) {
       )}
 
       {/* Teaching (CV specific) */}
-      {hasContent(data.teaching) && (
-        <div className="prev-section">
+      {showSection(6) && hasContent(data.teaching) && (
+        <div className="prev-section" data-preview-block="6">
           <div
             className="prev-section-title"
             style={{ borderColor: color, color }}
@@ -274,8 +275,8 @@ export default function CVPreview({ data, accentColor, template }) {
       )}
 
       {/* Languages */}
-      {data.languages?.some((lang) => lang.language?.trim()) && (
-        <div className="prev-section">
+      {showSection(7) && data.languages?.some((lang) => lang.language?.trim()) && (
+        <div className="prev-section" data-preview-block="7">
           <div
             className="prev-section-title"
             style={{ borderColor: color, color }}

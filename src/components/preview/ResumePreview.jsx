@@ -1,4 +1,4 @@
-export default function ResumePreview({ data, accentColor, template }) {
+export default function ResumePreview({ data, accentColor, template, pageSections = null, showHeader = true }) {
   const color = accentColor.value;
   const lightColor = accentColor.light;
   const isModern = template === 'modern';
@@ -7,6 +7,7 @@ export default function ResumePreview({ data, accentColor, template }) {
     return Object.values(e).some((v) => typeof v === 'string' && v.trim() !== '' && v !== e.id);
   });
   const hasEntryContent = (entry) => Object.values(entry).some((v) => typeof v === 'string' && v.trim() !== '' && v !== entry.id);
+  const showSection = (index) => pageSections === null || pageSections.includes(String(index));
 
   const pi = data.personalInfo;
   const contactItems = [pi.email, pi.phone, pi.location, pi.linkedin, pi.website].filter(Boolean);
@@ -14,11 +15,11 @@ export default function ResumePreview({ data, accentColor, template }) {
   return (
     <div className={`preview-page-inner ${isModern ? 'prev-modern' : ''}`}>
       {/* Header */}
-      <div
+      {showHeader && <div
         className="prev-header"
         style={isModern ? { backgroundColor: color } : {}}
       >
-        <div className="prev-header-row">
+      <div className="prev-header-row">
           <div className="prev-header-copy">
             <div
               className="prev-name"
@@ -37,11 +38,11 @@ export default function ResumePreview({ data, accentColor, template }) {
           </div>
           {pi.photoUrl && <img src={pi.photoUrl} alt="Profile" className="prev-profile-photo" />}
         </div>
-      </div>
+      </div>}
 
       {/* Summary */}
-      {data.summary && (
-        <div className="prev-section">
+      {showSection(0) && data.summary && (
+        <div className="prev-section" data-preview-block="0">
           <div className="prev-section-title" style={{ borderColor: color, color }}>
             PROFESSIONAL SUMMARY
           </div>
@@ -50,8 +51,8 @@ export default function ResumePreview({ data, accentColor, template }) {
       )}
 
       {/* Experience */}
-      {hasContent(data.experience) && (
-        <div className="prev-section">
+      {showSection(1) && hasContent(data.experience) && (
+        <div className="prev-section" data-preview-block="1">
           <div className="prev-section-title" style={{ borderColor: color, color }}>
             EXPERIENCE
           </div>
@@ -77,8 +78,8 @@ export default function ResumePreview({ data, accentColor, template }) {
       )}
 
       {/* Education */}
-      {hasContent(data.education) && (
-        <div className="prev-section">
+      {showSection(2) && hasContent(data.education) && (
+        <div className="prev-section" data-preview-block="2">
           <div className="prev-section-title" style={{ borderColor: color, color }}>
             EDUCATION
           </div>
@@ -106,8 +107,8 @@ export default function ResumePreview({ data, accentColor, template }) {
       )}
 
       {/* Skills */}
-      {data.skills?.some((skill) => skill.items?.trim()) && (
-        <div className="prev-section">
+      {showSection(3) && data.skills?.some((skill) => skill.items?.trim()) && (
+        <div className="prev-section" data-preview-block="3">
           <div className="prev-section-title" style={{ borderColor: color, color }}>
             SKILLS
           </div>
@@ -125,8 +126,8 @@ export default function ResumePreview({ data, accentColor, template }) {
       )}
 
       {/* Projects */}
-      {hasContent(data.projects) && (
-        <div className="prev-section">
+      {showSection(4) && hasContent(data.projects) && (
+        <div className="prev-section" data-preview-block="4">
           <div className="prev-section-title" style={{ borderColor: color, color }}>
             PROJECTS
           </div>
@@ -150,8 +151,8 @@ export default function ResumePreview({ data, accentColor, template }) {
       )}
 
       {/* Certifications */}
-      {hasContent(data.certifications) && (
-        <div className="prev-section">
+      {showSection(5) && hasContent(data.certifications) && (
+        <div className="prev-section" data-preview-block="5">
           <div className="prev-section-title" style={{ borderColor: color, color }}>
             CERTIFICATIONS
           </div>
@@ -172,8 +173,8 @@ export default function ResumePreview({ data, accentColor, template }) {
       )}
 
       {/* Languages */}
-      {data.languages?.some((lang) => lang.language?.trim()) && (
-        <div className="prev-section">
+      {showSection(6) && data.languages?.some((lang) => lang.language?.trim()) && (
+        <div className="prev-section" data-preview-block="6">
           <div className="prev-section-title" style={{ borderColor: color, color }}>
             LANGUAGES
           </div>
