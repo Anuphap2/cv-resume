@@ -91,15 +91,8 @@ export default function App() {
   }, [docType, resumeData, cvData, portfolioData]);
 
   const handleGenerated = () => {
-    try {
-      localStorage.removeItem(DRAFT_STORAGE_KEY);
-    } catch {
-      // Browsers may block storage access; the generated file is still available.
-    }
-    setResumeData(structuredClone(defaultResumeData));
-    setCVData(structuredClone(defaultCVData));
-    setPortfolioData(structuredClone(defaultPortfolioData));
-    setDocType(null);
+    // Keep the current draft and stay in the builder after download so users can
+    // make another version without entering the same information again.
   };
 
   const handleReset = () => {

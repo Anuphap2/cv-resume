@@ -122,6 +122,7 @@ export default function ResumeClassicPDF({ data, accentColor }) {
   const hasEntries = (arr) => arr && arr.some((e) =>
     Object.values(e).some((v) => typeof v === 'string' && v.trim() !== '' && v !== e.id)
   );
+  const hasEntryContent = (entry) => Object.values(entry).some((v) => typeof v === 'string' && v.trim() !== '' && v !== entry.id);
 
   return (
     <Document>
@@ -195,7 +196,7 @@ export default function ResumeClassicPDF({ data, accentColor }) {
         )}
 
         {/* Skills */}
-        {hasEntries(data.skills) && (
+        {data.skills?.some((skill) => skill.items?.trim()) && (
           <View>
             <Text style={styles.sectionTitle}>Skills</Text>
             {data.skills.map((skill) => (
@@ -214,15 +215,16 @@ export default function ResumeClassicPDF({ data, accentColor }) {
           <View>
             <Text style={styles.sectionTitle}>Projects</Text>
             {data.projects.map((proj) => (
-              proj.name ? (
+              hasEntryContent(proj) ? (
                 <View key={proj.id} style={styles.entry}>
-                  <Text style={styles.entryTitle}>{proj.name}</Text>
+                  {proj.name ? <Text style={styles.entryTitle}>{proj.name}</Text> : null}
                   {proj.description ? <Text style={styles.entryDesc}>{proj.description}</Text> : null}
                   {proj.technologies ? (
                     <Text style={{ ...styles.entryDesc, color: '#777', fontSize: 8 }}>
                       Technologies: {proj.technologies}
                     </Text>
                   ) : null}
+                  {proj.url ? <Text style={{ ...styles.entryDesc, color: '#777', fontSize: 8 }}>Link: {proj.url}</Text> : null}
                 </View>
               ) : null
             ))}
@@ -234,13 +236,14 @@ export default function ResumeClassicPDF({ data, accentColor }) {
           <View>
             <Text style={styles.sectionTitle}>Certifications</Text>
             {data.certifications.map((cert) => (
-              cert.name ? (
+              hasEntryContent(cert) ? (
                 <View key={cert.id} style={styles.entry} wrap={false}>
                   <View style={styles.entryRow}>
                     <Text style={styles.entryTitle}>{cert.name}</Text>
                     <Text style={styles.entryDate}>{cert.date}</Text>
                   </View>
                   {cert.issuer ? <Text style={styles.entrySubtitle}>{cert.issuer}</Text> : null}
+                  {cert.url ? <Text style={{ ...styles.entryDesc, color: '#777', fontSize: 8 }}>Link: {cert.url}</Text> : null}
                 </View>
               ) : null
             ))}
@@ -248,12 +251,12 @@ export default function ResumeClassicPDF({ data, accentColor }) {
         )}
 
         {/* Languages */}
-        {hasEntries(data.languages) && (
+        {data.languages?.some((lang) => lang.language?.trim()) && (
           <View>
             <Text style={styles.sectionTitle}>Languages</Text>
             <View style={styles.langRow}>
               {data.languages.map((lang) => (
-                lang.language ? (
+                hasEntryContent(lang) ? (
                   <View key={lang.id} style={{ flexDirection: 'row' }}>
                     <Text style={styles.langName}>{lang.language}</Text>
                     <Text style={{ ...styles.langLevel, marginLeft: 3 }}>({lang.proficiency})</Text>

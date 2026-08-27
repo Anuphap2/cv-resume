@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, TextField, Button, Paper, IconButton, Chip, Autocomplete } from '@mui/material';
+import { Box, Typography, Grid, TextField, Button, Paper, IconButton, Chip } from '@mui/material';
 import { School as SchoolIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useLanguage } from '../../i18n';
 
@@ -28,6 +28,19 @@ export default function EducationStep({ data, onChange, docType }) {
 
   const updateEntry = (id, field, value) => {
     onChange(data.map((e) => (e.id === id ? { ...e, [field]: value } : e)));
+  };
+
+  const handleEndYearChange = (id, value) => {
+    updateEntry(id, 'endDate', value.replace(/[^0-9a-zA-Zก-๙]/g, '').slice(0, 9));
+  };
+
+  const normalizeEndYear = (id, value) => {
+    const trimmed = value.trim();
+    if (/^present$/i.test(trimmed) || trimmed === 'ปัจจุบัน') {
+      updateEntry(id, 'endDate', 'Present');
+      return;
+    }
+    updateEntry(id, 'endDate', trimmed.replace(/[^0-9]/g, '').slice(0, 4));
   };
 
   return (
@@ -124,40 +137,34 @@ export default function EducationStep({ data, onChange, docType }) {
             </Grid>
 
             <Grid size={{ xs: 12, md: 4 }}>
-              <Autocomplete
-                freeSolo
-                options={Array.from({ length: new Date().getFullYear() - 1970 + 1 }, (_, i) => String(new Date().getFullYear() - i))}
+              <TextField
+                fullWidth
+                type="text"
+                inputMode="numeric"
+                label={t('education.startYear')}
+                placeholder="e.g. 2013"
                 value={entry.startDate || ''}
-                onInputChange={(event, newInputValue) => updateEntry(entry.id, 'startDate', newInputValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('education.startYear')}
-                    placeholder="e.g. 2013"
-                    slotProps={{
-                      inputLabel: { shrink: true }
-                    }}
-                  />
-                )}
+                onChange={(e) => updateEntry(entry.id, 'startDate', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                  htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 4 },
+                }}
               />
             </Grid>
 
             <Grid size={{ xs: 12, md: 4 }}>
-              <Autocomplete
-                freeSolo
-                options={Array.from({ length: new Date().getFullYear() - 1970 + 1 }, (_, i) => String(new Date().getFullYear() - i))}
+              <TextField
+                fullWidth
+                type="text"
+                label={t('education.endYear')}
+                placeholder={t('education.endYearPlaceholder')}
                 value={entry.endDate || ''}
-                onInputChange={(event, newInputValue) => updateEntry(entry.id, 'endDate', newInputValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('education.endYear')}
-                    placeholder="e.g. 2017"
-                    slotProps={{
-                      inputLabel: { shrink: true }
-                    }}
-                  />
-                )}
+                onChange={(e) => handleEndYearChange(entry.id, e.target.value)}
+                onBlur={(e) => normalizeEndYear(entry.id, e.target.value)}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                  htmlInput: { maxLength: 9 },
+                }}
               />
             </Grid>
 

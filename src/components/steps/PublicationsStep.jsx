@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, TextField, Button, Paper, IconButton, Chip, Autocomplete } from '@mui/material';
+import { Box, Typography, Grid, TextField, Button, Paper, IconButton, Chip } from '@mui/material';
 import { Book as BookIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useLanguage } from '../../i18n';
 
@@ -119,21 +119,18 @@ export default function PublicationsStep({ data, onChange }) {
             </Grid>
 
             <Grid size={{ xs: 12, md: 4 }}>
-              <Autocomplete
-                freeSolo
-                options={Array.from({ length: new Date().getFullYear() - 1970 + 1 }, (_, i) => String(new Date().getFullYear() - i))}
+              <TextField
+                fullWidth
+                type="text"
+                inputMode="numeric"
+                label={t('publications.year')}
+                placeholder={t('publications.yearPlaceholder')}
                 value={entry.year || ''}
-                onInputChange={(event, newInputValue) => updateEntry(entry.id, 'year', newInputValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('publications.year')}
-                    placeholder={t('publications.yearPlaceholder')}
-                    slotProps={{
-                      inputLabel: { shrink: true }
-                    }}
-                  />
-                )}
+                onChange={(e) => updateEntry(entry.id, 'year', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                  htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 4 },
+                }}
               />
             </Grid>
 

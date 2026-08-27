@@ -118,6 +118,7 @@ export default function CVAcademicPDF({ data, accentColor }) {
   const hasEntries = (arr) => arr && arr.some((e) =>
     Object.values(e).some((v) => typeof v === 'string' && v.trim() !== '' && v !== e.id)
   );
+  const hasEntryContent = (entry) => Object.values(entry).some((v) => typeof v === 'string' && v.trim() !== '' && v !== entry.id);
 
   return (
     <Document>
@@ -146,7 +147,7 @@ export default function CVAcademicPDF({ data, accentColor }) {
           <View>
             <Text style={styles.sectionTitle}>Education</Text>
             {data.education.map((edu) => (
-              (edu.institution || edu.degree) ? (
+              hasEntryContent(edu) ? (
                 <View key={edu.id} style={styles.entry} wrap={false}>
                   <View style={styles.entryRow}>
                     <View style={{ flex: 1 }}>
@@ -180,7 +181,7 @@ export default function CVAcademicPDF({ data, accentColor }) {
           <View>
             <Text style={styles.sectionTitle}>Professional Experience</Text>
             {data.experience.map((exp) => (
-              (exp.organization || exp.position) ? (
+              hasEntryContent(exp) ? (
                 <View key={exp.id} style={styles.entry} wrap={false}>
                   <View style={styles.entryRow}>
                     <View style={{ flex: 1 }}>
@@ -202,7 +203,7 @@ export default function CVAcademicPDF({ data, accentColor }) {
           <View>
             <Text style={styles.sectionTitle}>Publications</Text>
             {data.publications.map((pub, i) => (
-              pub.title ? (
+              hasEntryContent(pub) ? (
                 <View key={pub.id} style={styles.pubEntry}>
                   <Text style={styles.pubText}>
                     [{i + 1}] {pub.authors ? `${pub.authors}. ` : ''}&quot;{pub.title}.&quot;
@@ -220,7 +221,7 @@ export default function CVAcademicPDF({ data, accentColor }) {
           <View>
             <Text style={styles.sectionTitle}>Research Projects</Text>
             {data.research.map((res) => (
-              res.title ? (
+              hasEntryContent(res) ? (
                 <View key={res.id} style={styles.entry} wrap={false}>
                   <View style={styles.entryRow}>
                     <View style={{ flex: 1 }}>
@@ -244,7 +245,7 @@ export default function CVAcademicPDF({ data, accentColor }) {
           <View>
             <Text style={styles.sectionTitle}>Teaching Experience</Text>
             {data.teaching.map((t) => (
-              t.course ? (
+              hasEntryContent(t) ? (
                 <View key={t.id} style={styles.entry} wrap={false}>
                   <View style={styles.entryRow}>
                     <View>
@@ -265,25 +266,26 @@ export default function CVAcademicPDF({ data, accentColor }) {
           <View>
             <Text style={styles.sectionTitle}>Certifications & Awards</Text>
             {data.certifications.map((cert) => (
-              cert.name ? (
+              hasEntryContent(cert) ? (
                 <View key={cert.id} style={styles.entry} wrap={false}>
                   <View style={styles.entryRow}>
                     <Text style={styles.entryTitle}>{cert.name}</Text>
                     <Text style={styles.entryDate}>{cert.date}</Text>
                   </View>
                   {cert.issuer ? <Text style={styles.entrySubtitle}>{cert.issuer}</Text> : null}
+                  {cert.url ? <Text style={{ ...styles.entryDesc, fontSize: 8, color: '#777' }}>Link: {cert.url}</Text> : null}
                 </View>
               ) : null
             ))}
           </View>
         )}
 
-        {hasEntries(data.languages) && (
+        {data.languages?.some((lang) => lang.language?.trim()) && (
           <View>
             <Text style={styles.sectionTitle}>Languages</Text>
             <View style={styles.langRow}>
               {data.languages.map((lang) => (
-                lang.language ? (
+                hasEntryContent(lang) ? (
                   <View key={lang.id} style={{ flexDirection: 'row' }}>
                     <Text style={styles.langName}>{lang.language}</Text>
                     <Text style={{ ...styles.langLevel, marginLeft: 3 }}>({lang.proficiency})</Text>

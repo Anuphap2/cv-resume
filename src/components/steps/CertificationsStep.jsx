@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, TextField, Button, Paper, IconButton, Chip, Autocomplete } from '@mui/material';
+import { Box, Typography, Grid, TextField, Button, Paper, IconButton, Chip } from '@mui/material';
 import { WorkspacePremium as AwardIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useLanguage } from '../../i18n';
 
@@ -104,21 +104,18 @@ export default function CertificationsStep({ data, onChange }) {
             </Grid>
 
             <Grid size={{ xs: 12, md: 4 }}>
-              <Autocomplete
-                freeSolo
-                options={Array.from({ length: new Date().getFullYear() - 1970 + 1 }, (_, i) => String(new Date().getFullYear() - i))}
+              <TextField
+                fullWidth
+                type="text"
+                inputMode="numeric"
+                label={t('certifications.date')}
+                placeholder={t('certifications.datePlaceholder')}
                 value={entry.date || ''}
-                onInputChange={(event, newInputValue) => updateEntry(entry.id, 'date', newInputValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('certifications.date')}
-                    placeholder={t('certifications.datePlaceholder')}
-                    slotProps={{
-                      inputLabel: { shrink: true }
-                    }}
-                  />
-                )}
+                onChange={(e) => updateEntry(entry.id, 'date', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                  htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 4 },
+                }}
               />
             </Grid>
           </Grid>

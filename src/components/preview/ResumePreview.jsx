@@ -6,6 +6,7 @@ export default function ResumePreview({ data, accentColor, template }) {
   const hasContent = (arr) => arr && arr.some((e) => {
     return Object.values(e).some((v) => typeof v === 'string' && v.trim() !== '' && v !== e.id);
   });
+  const hasEntryContent = (entry) => Object.values(entry).some((v) => typeof v === 'string' && v.trim() !== '' && v !== entry.id);
 
   const pi = data.personalInfo;
   const contactItems = [pi.email, pi.phone, pi.location, pi.linkedin, pi.website].filter(Boolean);
@@ -55,7 +56,7 @@ export default function ResumePreview({ data, accentColor, template }) {
             EXPERIENCE
           </div>
           {data.experience.map((exp) => (
-            (exp.company || exp.position) && (
+            hasEntryContent(exp) && (
               <div className="prev-entry" key={exp.id}>
                 <div className="prev-entry-header">
                   <div>
@@ -82,7 +83,7 @@ export default function ResumePreview({ data, accentColor, template }) {
             EDUCATION
           </div>
           {data.education.map((edu) => (
-            (edu.institution || edu.degree) && (
+            hasEntryContent(edu) && (
               <div className="prev-entry" key={edu.id}>
                 <div className="prev-entry-header">
                   <div>
@@ -105,7 +106,7 @@ export default function ResumePreview({ data, accentColor, template }) {
       )}
 
       {/* Skills */}
-      {hasContent(data.skills) && (
+      {data.skills?.some((skill) => skill.items?.trim()) && (
         <div className="prev-section">
           <div className="prev-section-title" style={{ borderColor: color, color }}>
             SKILLS
@@ -130,9 +131,9 @@ export default function ResumePreview({ data, accentColor, template }) {
             PROJECTS
           </div>
           {data.projects.map((proj) => (
-            proj.name && (
+            hasEntryContent(proj) && (
               <div className="prev-entry" key={proj.id}>
-                <div className="prev-entry-title">{proj.name}</div>
+                {proj.name && <div className="prev-entry-title">{proj.name}</div>}
                 {proj.description && (
                   <div className="prev-entry-desc">{proj.description}</div>
                 )}
@@ -141,6 +142,7 @@ export default function ResumePreview({ data, accentColor, template }) {
                     Tech: {proj.technologies}
                   </div>
                 )}
+                {proj.url && <div className="prev-entry-desc" style={{ color: '#777', fontSize: '7.5px' }}>Link: {proj.url}</div>}
               </div>
             )
           ))}
@@ -154,7 +156,7 @@ export default function ResumePreview({ data, accentColor, template }) {
             CERTIFICATIONS
           </div>
           {data.certifications.map((cert) => (
-            cert.name && (
+            hasEntryContent(cert) && (
               <div className="prev-entry" key={cert.id}>
                 <div className="prev-entry-header">
                   <div className="prev-entry-title">{cert.name}</div>
@@ -170,14 +172,14 @@ export default function ResumePreview({ data, accentColor, template }) {
       )}
 
       {/* Languages */}
-      {hasContent(data.languages) && (
+      {data.languages?.some((lang) => lang.language?.trim()) && (
         <div className="prev-section">
           <div className="prev-section-title" style={{ borderColor: color, color }}>
             LANGUAGES
           </div>
           <div className="prev-languages">
             {data.languages.map((lang) => (
-              lang.language && (
+              hasEntryContent(lang) && (
                 <div className="prev-lang-item" key={lang.id}>
                   <span className="prev-lang-name">{lang.language}</span>
                   {' '}

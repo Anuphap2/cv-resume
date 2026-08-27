@@ -9,6 +9,7 @@ export default function CVPreview({ data, accentColor, template }) {
         (v) => typeof v === "string" && v.trim() !== "" && v !== e.id,
       );
     });
+  const hasEntryContent = (entry) => Object.values(entry).some((v) => typeof v === 'string' && v.trim() !== '' && v !== entry.id);
 
   const pi = data.personalInfo;
   const contactItems = [
@@ -69,7 +70,7 @@ export default function CVPreview({ data, accentColor, template }) {
           </div>
           {data.education.map(
             (edu) =>
-              (edu.institution || edu.degree) && (
+              hasEntryContent(edu) && (
                 <div className="prev-entry" key={edu.id}>
                   <div className="prev-entry-header">
                     <div>
@@ -124,7 +125,7 @@ export default function CVPreview({ data, accentColor, template }) {
           </div>
           {data.experience.map(
             (exp) =>
-              (exp.organization || exp.position) && (
+              hasEntryContent(exp) && (
                 <div className="prev-entry" key={exp.id}>
                   <div className="prev-entry-header">
                     <div>
@@ -159,7 +160,7 @@ export default function CVPreview({ data, accentColor, template }) {
           </div>
           {data.publications.map(
             (pub, i) =>
-              pub.title && (
+              hasEntryContent(pub) && (
                 <div className="prev-entry" key={pub.id}>
                   <div className="prev-entry-desc">
                     <span style={{ fontWeight: 600 }}>[{i + 1}]</span>{" "}
@@ -190,7 +191,7 @@ export default function CVPreview({ data, accentColor, template }) {
           </div>
           {data.research.map(
             (res) =>
-              res.title && (
+              hasEntryContent(res) && (
                 <div className="prev-entry" key={res.id}>
                   <div className="prev-entry-header">
                     <div>
@@ -227,7 +228,7 @@ export default function CVPreview({ data, accentColor, template }) {
           </div>
           {data.certifications.map(
             (cert) =>
-              cert.name && (
+              hasEntryContent(cert) && (
                 <div className="prev-entry" key={cert.id}>
                   <div className="prev-entry-header">
                     <div className="prev-entry-title">{cert.name}</div>
@@ -253,7 +254,7 @@ export default function CVPreview({ data, accentColor, template }) {
           </div>
           {data.teaching.map(
             (t) =>
-              t.course && (
+              hasEntryContent(t) && (
                 <div className="prev-entry" key={t.id}>
                   <div className="prev-entry-header">
                     <div>
@@ -273,7 +274,7 @@ export default function CVPreview({ data, accentColor, template }) {
       )}
 
       {/* Languages */}
-      {hasContent(data.languages) && (
+      {data.languages?.some((lang) => lang.language?.trim()) && (
         <div className="prev-section">
           <div
             className="prev-section-title"
@@ -284,7 +285,7 @@ export default function CVPreview({ data, accentColor, template }) {
           <div className="prev-languages">
             {data.languages.map(
               (lang) =>
-                lang.language && (
+                hasEntryContent(lang) && (
                   <div className="prev-lang-item" key={lang.id}>
                     <span className="prev-lang-name">{lang.language}</span>{" "}
                     <span className="prev-lang-level">

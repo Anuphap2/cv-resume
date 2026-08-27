@@ -1,4 +1,4 @@
-import { Box, Typography, TextField, Button, Paper, IconButton, Chip, Autocomplete } from '@mui/material';
+import { Box, Typography, TextField, Button, Paper, IconButton, Chip } from '@mui/material';
 import { Settings as SettingsIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useLanguage } from '../../i18n';
 
@@ -81,38 +81,16 @@ export default function SkillsStep({ data, onChange }) {
               }}
             />
 
-            <Autocomplete
-              multiple
-              freeSolo
-              options={[]}
-              value={skill.items ? skill.items.split(',').map((s) => s.trim()).filter(Boolean) : []}
-              onChange={(event, newValue) => {
-                updateCategory(skill.id, 'items', newValue.join(', '));
+            <TextField
+              fullWidth
+              label={t('skills.skills')}
+              placeholder={t('skills.skillPlaceholder')}
+              value={skill.items || ''}
+              onChange={(e) => updateCategory(skill.id, 'items', e.target.value)}
+              helperText={t('skills.skillPlaceholder')}
+              slotProps={{
+                inputLabel: { shrink: true }
               }}
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => {
-                  const { key, ...tagProps } = getTagProps({ index });
-                  return (
-                    <Chip
-                      key={key}
-                      variant="outlined"
-                      label={option}
-                      size="small"
-                      {...tagProps}
-                    />
-                  );
-                })
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={t('skills.skills')}
-                  placeholder={t('skills.skillPlaceholder')}
-                  slotProps={{
-                    inputLabel: { shrink: true }
-                  }}
-                />
-              )}
             />
           </Box>
         </Paper>
