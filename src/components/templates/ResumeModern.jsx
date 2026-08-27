@@ -135,12 +135,12 @@ export default function ResumeModernPDF({ data, accentColor }) {
         {/* Header with colored background */}
         <View style={styles.headerBg}>
           <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-            {pi.photoUrl ? <Image src={pi.photoUrl} style={{ width: 58, height: 72, objectFit: 'cover', borderRadius: 6, marginRight: 12 }} /> : null}
             <View style={{ flex: 1, paddingTop: 2 }}>
               <Text style={styles.name}>{pi.fullName || 'Your Name'}</Text>
               {pi.jobTitle ? <Text style={styles.jobTitle}>{pi.jobTitle}</Text> : null}
               {contacts.length > 0 && <View style={styles.contactRow}>{contacts.map((c, i) => <Text key={i} style={styles.contactItem}>{c}</Text>)}</View>}
             </View>
+            {pi.photoUrl ? <Image src={pi.photoUrl} style={{ width: 52, height: 66, objectFit: 'cover', borderRadius: 8, marginLeft: 12 }} /> : null}
           </View>
         </View>
 
@@ -217,7 +217,7 @@ export default function ResumeModernPDF({ data, accentColor }) {
               <Text style={styles.sectionTitle}>Projects</Text>
               {data.projects.map((proj) => (
               hasEntryContent(proj) ? (
-                <View key={proj.id} style={styles.entry}>
+                <View key={proj.id} style={styles.entry} wrap={false}>
                   {proj.name ? <Text style={styles.entryTitle}>{proj.name}</Text> : null}
                     {proj.description ? <Text style={styles.entryDesc}>{proj.description}</Text> : null}
                   {proj.technologies ? (
@@ -256,7 +256,7 @@ export default function ResumeModernPDF({ data, accentColor }) {
               <View style={styles.langRow}>
                 {data.languages.map((lang) => (
                   hasEntryContent(lang) ? (
-                    <View key={lang.id} style={{ flexDirection: 'row' }}>
+                    <View key={lang.id} style={{ flexDirection: 'row', marginRight: 12 }}>
                       <Text style={styles.langName}>{lang.language}</Text>
                       <Text style={{ ...styles.langLevel, marginLeft: 3 }}>({lang.proficiency})</Text>
                     </View>

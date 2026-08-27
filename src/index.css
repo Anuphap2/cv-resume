@@ -556,7 +556,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .builder-preview { background: #e7e8ec; border-left-color: #dedfe4; }
 .builder-preview-topbar { padding: 22px 26px 18px; background: rgba(255,255,255,0.46); }
 .builder-preview-stage { padding: 32px; background: #e7e8ec; }
-.builder-preview-paper { border-radius: 10px !important; box-shadow: 0 16px 34px rgba(20, 24, 31, 0.14) !important; }
+.builder-preview-paper { height: auto; min-height: 842px; aspect-ratio: auto; overflow: visible !important; border-radius: 10px !important; box-shadow: 0 16px 34px rgba(20, 24, 31, 0.14) !important; }
 
 @media (max-width: 1380px) {
   .builder-grid { grid-template-columns: 215px minmax(450px, 1fr) minmax(340px, 0.8fr); }

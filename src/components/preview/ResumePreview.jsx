@@ -139,7 +139,7 @@ export default function ResumePreview({ data, accentColor, template }) {
                 )}
                 {proj.technologies && (
                   <div className="prev-entry-desc" style={{ color: '#777', fontSize: '7.5px' }}>
-                    Tech: {proj.technologies}
+                    Technologies: {proj.technologies}
                   </div>
                 )}
                 {proj.url && <div className="prev-entry-desc" style={{ color: '#777', fontSize: '7.5px' }}>Link: {proj.url}</div>}

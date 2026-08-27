@@ -126,12 +126,12 @@ export default function CVProfessionalPDF({ data, accentColor }) {
       <Page size="A4" style={styles.page}>
         <View style={styles.headerBg}>
           <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-            {pi.photoUrl ? <Image src={pi.photoUrl} style={{ width: 58, height: 72, objectFit: 'cover', borderRadius: 6, marginRight: 12 }} /> : null}
             <View style={{ flex: 1, paddingTop: 2 }}>
               <Text style={styles.name}>{pi.fullName || 'Your Name'}</Text>
               {pi.title ? <Text style={styles.title}>{pi.title}</Text> : null}
               {contacts.length > 0 && <View style={styles.contactRow}>{contacts.map((c, i) => <Text key={i} style={styles.contactItem}>{c}</Text>)}</View>}
             </View>
+            {pi.photoUrl ? <Image src={pi.photoUrl} style={{ width: 52, height: 66, objectFit: 'cover', borderRadius: 8, marginLeft: 12 }} /> : null}
           </View>
         </View>
 
@@ -281,7 +281,7 @@ export default function CVProfessionalPDF({ data, accentColor }) {
               <View style={styles.langRow}>
                 {data.languages.map((lang) => (
                 hasEntryContent(lang) ? (
-                    <View key={lang.id} style={{ flexDirection: 'row' }}>
+                    <View key={lang.id} style={{ flexDirection: 'row', marginRight: 12 }}>
                       <Text style={styles.langName}>{lang.language}</Text>
                       <Text style={{ ...styles.langLevel, marginLeft: 3 }}>({lang.proficiency})</Text>
                     </View>
