@@ -1,3 +1,5 @@
+import { formatDateRange } from '../../utils/formatDates';
+
 export default function CVPreview({ data, accentColor, template, pageSections = null, showHeader = true }) {
   const color = accentColor.value;
   const isProfessional = template === "professional";
@@ -136,9 +138,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
                       </div>
                     </div>
                     <div className="prev-entry-date">
-                      {exp.startDate}
-                      {exp.startDate && " — "}
-                      {exp.current ? "Present" : exp.endDate}
+                      {formatDateRange(exp.startDate, exp.endDate, exp.current)}
                     </div>
                   </div>
                   {exp.description && (

@@ -1,4 +1,5 @@
 import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
+import { formatDateRange } from '../../utils/formatDates';
 
 const createStyles = (accentColor) =>
   StyleSheet.create({
@@ -184,7 +185,7 @@ export default function CVProfessionalPDF({ data, accentColor }) {
                         <Text style={styles.entrySubtitle}>{exp.organization}</Text>
                       </View>
                       <Text style={styles.entryDate}>
-                        {exp.startDate}{exp.startDate ? ' — ' : ''}{exp.current ? 'Present' : exp.endDate}
+                        {formatDateRange(exp.startDate, exp.endDate, exp.current)}
                       </Text>
                     </View>
                     {exp.description ? <Text style={styles.entryDesc}>{exp.description}</Text> : null}

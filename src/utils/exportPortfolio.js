@@ -1,3 +1,5 @@
+import { formatDateRange } from './formatDates';
+
 export function generatePortfolioHTML(data, accentColor, template) {
   const color = accentColor.value;
   const isCyber = template === 'cyberpunk';
@@ -83,7 +85,7 @@ export function generatePortfolioHTML(data, accentColor, template) {
           <div class="timeline-line"></div>
         </div>
         <div class="timeline-content">
-          <span class="timeline-date">${exp.startDate}${exp.startDate && ' — '}${exp.current ? 'Present' : exp.endDate}</span>
+          <span class="timeline-date">${formatDateRange(exp.startDate, exp.endDate, exp.current)}</span>
           <h3 class="timeline-title">${exp.position}</h3>
           <div class="timeline-company">${exp.company}</div>
           <p class="timeline-desc">${exp.description}</p>

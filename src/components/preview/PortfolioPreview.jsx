@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { FiMail, FiPhone, FiMapPin, FiGithub, FiLinkedin, FiExternalLink } from 'react-icons/fi';
 
+import { formatDateRange } from '../../utils/formatDates';
+
 export default function PortfolioPreview({ data, accentColor, template }) {
   const color = accentColor.value;
   const isCyber = template === 'cyberpunk';
@@ -373,7 +375,7 @@ export default function PortfolioPreview({ data, accentColor, template }) {
                   </div>
                   <div style={{ flex: 1, paddingBottom: '16px' }}>
                     <div style={{ fontSize: '0.75rem', color: theme.mutedText }}>
-                      {exp.startDate}{exp.startDate && ' — '}{exp.current ? 'Present' : exp.endDate}
+                      {formatDateRange(exp.startDate, exp.endDate, exp.current)}
                     </div>
                     <h3 style={{ fontSize: '0.9rem', fontWeight: 700 }}>{exp.position}</h3>
                     <div style={{ fontSize: '0.8rem', color, fontWeight: 500, marginBottom: '6px' }}>{exp.company}</div>
