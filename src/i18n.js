@@ -120,7 +120,7 @@ const messages = {
       orcid: 'ORCID',
       orcidPlaceholder: '0000-0002-1234-5678',
       github: 'GitHub URL',
-      githubPlaceholder: 'username',
+      githubPlaceholder: 'github.com/username',
     },
     summary: {
       resumeTitle: 'Professional Summary',
@@ -356,7 +356,7 @@ const messages = {
       orcid: 'ORCID',
       orcidPlaceholder: '0000-0002-1234-5678',
       github: 'GitHub URL',
-      githubPlaceholder: 'username',
+      githubPlaceholder: 'github.com/username',
     },
     summary: {
       resumeTitle: 'สรุปประวัติการทำงาน',

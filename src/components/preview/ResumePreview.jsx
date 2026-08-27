@@ -10,7 +10,7 @@ export default function ResumePreview({ data, accentColor, template, pageSection
   const showSection = (index) => pageSections === null || pageSections.includes(String(index));
 
   const pi = data.personalInfo;
-  const contactItems = [pi.email, pi.phone, pi.location, pi.linkedin, pi.website].filter(Boolean);
+  const contactItems = [pi.email, pi.phone, pi.location, pi.linkedin, pi.website, pi.github].filter(Boolean);
 
   return (
     <div className={`preview-page-inner ${isModern ? 'prev-modern' : ''}`}>

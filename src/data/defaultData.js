@@ -7,6 +7,7 @@ export const defaultResumeData = {
     location: '',
     linkedin: '',
     website: '',
+    github: '',
     photoUrl: '',
   },
   summary: '',
@@ -184,6 +185,7 @@ export const SAMPLE_RESUME_DATA = {
     location: 'San Francisco, CA',
     linkedin: 'linkedin.com/in/johnsmith',
     website: 'johnsmith.dev',
+    github: 'github.com/johnsmith',
     photoUrl: '',
   },
   summary:

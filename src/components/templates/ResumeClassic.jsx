@@ -118,7 +118,7 @@ const createStyles = (accentColor) =>
 export default function ResumeClassicPDF({ data, accentColor }) {
   const styles = createStyles(accentColor.value);
   const pi = data.personalInfo;
-  const contacts = [pi.email, pi.phone, pi.location, pi.linkedin, pi.website].filter(Boolean);
+  const contacts = [pi.email, pi.phone, pi.location, pi.linkedin, pi.website, pi.github].filter(Boolean);
 
   const hasEntries = (arr) => arr && arr.some((e) =>
     Object.values(e).some((v) => typeof v === 'string' && v.trim() !== '' && v !== e.id)

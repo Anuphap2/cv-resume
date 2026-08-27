@@ -228,20 +228,17 @@ export default function PersonalInfoStep({ data, onChange, docType }) {
           </Grid>
         )}
 
-        {docType === 'portfolio' && (
+        {(docType === 'resume' || docType === 'portfolio') && (
           <Grid size={{ xs: 12 }}>
             <TextField
               fullWidth
               label={t('personal.github')}
               variant="outlined"
               placeholder={t('personal.githubPlaceholder')}
-              value={data.github ? data.github.replace('github.com/', '') : ''}
-              onChange={(e) => update('github', e.target.value ? `github.com/${e.target.value.replace('github.com/', '')}` : '')}
+              value={data.github ? data.github.replace(/^https?:\/\//, '') : ''}
+              onChange={(e) => update('github', e.target.value.replace(/^https?:\/\//, '').trim())}
               slotProps={{
-                inputLabel: { shrink: true },
-                input: {
-                  startAdornment: <InputAdornment position="start">github.com/</InputAdornment>,
-                }
+                inputLabel: { shrink: true }
               }}
             />
           </Grid>
