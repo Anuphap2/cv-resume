@@ -34,8 +34,8 @@ export const defaultResumeData = {
     },
   ],
   skills: [
-    { id: crypto.randomUUID(), category: 'Technical', items: '' },
-    { id: crypto.randomUUID(), category: 'Soft Skills', items: '' },
+    { id: crypto.randomUUID(), category: 'Technical', items: '', evidence: '' },
+    { id: crypto.randomUUID(), category: 'Soft Skills', items: '', evidence: '' },
   ],
   certifications: [
     {
@@ -58,6 +58,7 @@ export const defaultResumeData = {
       url: '',
     },
   ],
+  customSections: [],
 };
 
 export const defaultCVData = {
@@ -147,6 +148,7 @@ export const defaultCVData = {
       description: '',
     },
   ],
+  customSections: [],
 };
 
 export const PROFICIENCY_LEVELS = [
@@ -265,8 +267,8 @@ export const defaultPortfolioData = {
     photoUrl: '',
   },
   skills: [
-    { id: crypto.randomUUID(), category: 'Frontend', items: 'React, HTML, CSS, Tailwind' },
-    { id: crypto.randomUUID(), category: 'Backend', items: 'Node.js, Express, databases' },
+    { id: crypto.randomUUID(), category: 'Frontend', items: 'React, HTML, CSS, Tailwind', evidence: '' },
+    { id: crypto.randomUUID(), category: 'Backend', items: 'Node.js, Express, databases', evidence: '' },
   ],
   projects: [
     {

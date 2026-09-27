@@ -13,6 +13,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
     });
   const hasEntryContent = (entry) => Object.values(entry).some((v) => typeof v === 'string' && v.trim() !== '' && v !== entry.id);
   const showSection = (index) => pageSections === null || pageSections.includes(String(index));
+  const showCustomSection = (id) => pageSections === null || pageSections.includes(`custom-${id}`);
 
   const pi = data.personalInfo;
   const contactItems = [
@@ -298,6 +299,18 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
           </div>
         </div>
       )}
+      {(Array.isArray(data.customSections) ? data.customSections : []).map((section) => (
+        showCustomSection(section.id) && (section.title?.trim() || section.content?.trim()) ? (
+          <div className="prev-section" data-preview-block={`custom-${section.id}`} key={section.id}>
+            {section.title?.trim() && (
+              <div className="prev-section-title" style={{ borderColor: color, color }}>
+                {section.title}
+              </div>
+            )}
+            {section.content?.trim() && <div className="prev-entry-desc">{section.content}</div>}
+          </div>
+        ) : null
+      ))}
     </div>
   );
 }

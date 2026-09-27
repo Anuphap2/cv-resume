@@ -1,5 +1,6 @@
 import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
 import { formatDateRange } from '../../utils/formatDates';
+import CustomSectionsPDF from './CustomSectionsPDF';
 
 const createStyles = (accentColor) =>
   StyleSheet.create({
@@ -300,6 +301,7 @@ export default function CVAcademicPDF({ data, accentColor }) {
             </View>
           </View>
         )}
+        <CustomSectionsPDF sections={data.customSections} styles={styles} />
       </Page>
     </Document>
   );

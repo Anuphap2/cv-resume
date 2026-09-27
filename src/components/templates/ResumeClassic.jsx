@@ -1,5 +1,6 @@
 import { Document, Page, Text, View, Image, StyleSheet, Link } from '@react-pdf/renderer';
 import { formatDateRange } from '../../utils/formatDates';
+import CustomSectionsPDF from './CustomSectionsPDF';
 
 const createStyles = (accentColor) =>
   StyleSheet.create({
@@ -96,6 +97,12 @@ const createStyles = (accentColor) =>
       fontSize: 9,
       color: '#555',
       flex: 1,
+    },
+    skillEvidence: {
+      fontSize: 7.5,
+      color: '#666',
+      marginTop: 2,
+      lineHeight: 1.35,
     },
     langRow: {
       flexDirection: 'row',
@@ -205,7 +212,7 @@ export default function ResumeClassicPDF({ data, accentColor }) {
               skill.items ? (
                 <View key={skill.id} style={styles.skillRow}>
                   <Text style={styles.skillCategory}>{skill.category}:</Text>
-                  <Text style={styles.skillItems}>{skill.items}</Text>
+                  <View style={{ flex: 1 }}><Text style={styles.skillItems}>{skill.items}</Text>{skill.evidence ? <Text style={styles.skillEvidence}>{skill.evidence}</Text> : null}</View>
                 </View>
               ) : null
             ))}
@@ -268,6 +275,7 @@ export default function ResumeClassicPDF({ data, accentColor }) {
             </View>
           </View>
         )}
+        <CustomSectionsPDF sections={data.customSections} styles={styles} />
       </Page>
     </Document>
   );

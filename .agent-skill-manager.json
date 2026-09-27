@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "modes": [
+    "agent"
+  ],
+  "managedFiles": {
+    "AGENTS.md": {
+      "sha256": "f0c3432e39414a1ee3226eb86c5c9eac7c28b9dfa0f6ba8acd252e6cbcfd9355",
+      "managedBlockSha256": "f0c3432e39414a1ee3226eb86c5c9eac7c28b9dfa0f6ba8acd252e6cbcfd9355"
+    },
+    $10ae341c99cf26563fd1ab1ec82079cca774632d2ea1d634a0f4dca8de2937f73"
+    },
+    ".agents/project/architecture.md": {
+      "sha256": "6df411acdd7ba303b73632e98ffb0a2aaf38097e9f1895ecbbd2e9c27be8afda"
+    },
+    ".agents/project/technical-debt.md": {
+      "sha256": "9fe2a174a6913a5374c28e073aaada287209212fffca6cde22f39ba8df30b298"
+    },
+    ".agents/project/agent-manager-config.json": {
+      "sha256": "489f5f5b28099fd2c3a0ae5d0a5315ae61401348c7cfc76954bb233b1fd6ffde"
+    },
+    ".agents/agents/engineering-team/agent.md": {
+      "sha256": "3ed429646b97472106cbc5357d5157e8a408ba26b9528c9a498c00204d366b7e"
+    },
+    ".agents/rules/00-engineering-team.md": {
+      "sha256": "e84f9eb87463d565194f7bd50eda48dd7a5ed7bb596e03d7b644dded92a39437"
+    },
+    ".agents/agents/developer/agent.md": {
+      "sha256": "12624d053609a89967f487fffb04c0b2284a2babc54c917098ff0e7d723f6733"
+    },
+    ".agents/agents/tester/agent.md": {
+      "sha256": "c0622fcd8de4d678394cf50f6ed9d74613371f8d3a910306ac463a275108929c"
+    },
+    ".agents/agents/ci-cd/agent.md": {
+      "sha256": "d20400273cc66e75d77d4794c4eccb5daa68ae301a362f2bc87b3c59e4e7571e"
+    },
+    ".agents/agents/git-release/agent.md": {
+      "sha256": "a3472ff4dd4a2a7c858e6e534fd4c9c40a87bc70a2bfd9c8e0ba27cea8391ffc"
+    }
+  }
+}

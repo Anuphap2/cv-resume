@@ -1,5 +1,9 @@
 import { formatDateRange } from './formatDates';
 
+const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+}[character]));
+
 export function generatePortfolioHTML(data, accentColor, template) {
   const color = accentColor.value;
   const isCyber = template === 'cyberpunk';
@@ -64,13 +68,14 @@ export function generatePortfolioHTML(data, accentColor, template) {
     if (!skill.items) return '';
     const skillItems = skill.items.split(',').map(item => {
       if (!item.trim()) return '';
-      return `<span class="skill-tag">${item.trim()}</span>`;
+      return `<span class="skill-tag">${escapeHtml(item.trim())}</span>`;
     }).join('');
 
     return `
       <div class="skill-category-card">
-        <h3 class="skill-cat-title">${skill.category}</h3>
+        <h3 class="skill-cat-title">${escapeHtml(skill.category)}</h3>
         <div class="skills-grid">${skillItems}</div>
+        ${skill.evidence ? `<p class="skill-evidence">${escapeHtml(skill.evidence)}</p>` : ''}
       </div>
     `;
   }).join('');

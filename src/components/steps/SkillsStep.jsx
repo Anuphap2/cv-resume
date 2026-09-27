@@ -1,4 +1,4 @@
-import { Box, Typography, TextField, Button, Paper, IconButton, Chip } from '@mui/material';
+import { Box, Typography, TextField, Button, IconButton, Divider } from '@mui/material';
 import { Settings as SettingsIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useLanguage } from '../../i18n';
 
@@ -7,7 +7,7 @@ export default function SkillsStep({ data, onChange }) {
   const addCategory = () => {
     onChange([
       ...data,
-      { id: crypto.randomUUID(), category: '', items: '' },
+      { id: crypto.randomUUID(), category: '', items: '', evidence: '' },
     ]);
   };
 
@@ -33,31 +33,15 @@ export default function SkillsStep({ data, onChange }) {
       </Typography>
 
       {data.map((skill, index) => (
-        <Paper
-          key={skill.id}
-          variant="outlined"
-          sx={{
-            p: 3,
-            mb: 3,
-            backgroundColor: 'var(--bg-glass)',
-            borderColor: 'var(--border)',
-            position: 'relative',
-          }}
-        >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-            <Chip 
-              label={`#${index + 1}`} 
-              size="small" 
-              sx={{ 
-                backgroundColor: 'var(--accent-bg)', 
-                color: 'var(--accent-light)', 
-                fontWeight: 600,
-                border: '1px solid var(--border-accent)' 
-              }} 
-            />
+        <Box key={skill.id} sx={{ py: 2.5, borderTop: index ? '1px solid var(--border)' : 0 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ color: 'var(--text-muted)', fontWeight: 700 }}>
+              {skill.category || `${t('skills.group')} ${index + 1}`}
+            </Typography>
             {data.length > 1 && (
               <IconButton 
                 onClick={() => removeCategory(skill.id)} 
+                aria-label={t('skills.remove')}
                 sx={{ 
                   color: 'var(--text-muted)',
                   '&:hover': { color: 'var(--danger)', backgroundColor: 'var(--danger-bg)' } 
@@ -68,7 +52,7 @@ export default function SkillsStep({ data, onChange }) {
             )}
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
               fullWidth
               label={t('skills.category')}
@@ -87,14 +71,29 @@ export default function SkillsStep({ data, onChange }) {
               placeholder={t('skills.skillPlaceholder')}
               value={skill.items || ''}
               onChange={(e) => updateCategory(skill.id, 'items', e.target.value)}
-              helperText={t('skills.skillPlaceholder')}
+              helperText={t('skills.skillHelp')}
+              multiline
+              minRows={2}
               slotProps={{
                 inputLabel: { shrink: true }
               }}
             />
+            <TextField
+              fullWidth
+              label={t('skills.evidence')}
+              placeholder={t('skills.evidencePlaceholder')}
+              value={skill.evidence || ''}
+              onChange={(e) => updateCategory(skill.id, 'evidence', e.target.value)}
+              helperText={t('skills.evidenceHelp')}
+              multiline
+              minRows={2}
+              slotProps={{ inputLabel: { shrink: true } }}
+            />
           </Box>
-        </Paper>
+        </Box>
       ))}
+
+      <Divider sx={{ mb: 2, borderColor: 'var(--border)' }} />
 
       <Button
         fullWidth

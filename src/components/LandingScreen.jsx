@@ -3,15 +3,17 @@ import {
   ArrowForward as ArrowForwardIcon,
   Description as FileTextIcon,
   MenuBook as BookOpenIcon,
+  School as SchoolIcon,
   Language as GlobeIcon,
   LockOutlined as LockIcon,
 } from '@mui/icons-material';
 import { useLanguage } from '../i18n';
 
 const OPTIONS = [
-  { id: 'resume', number: '01', icon: FileTextIcon },
-  { id: 'cv', number: '02', icon: BookOpenIcon },
-  { id: 'portfolio', number: '03', icon: GlobeIcon },
+  { id: 'studentInternship', number: '01', icon: SchoolIcon },
+  { id: 'resume', number: '02', icon: FileTextIcon },
+  { id: 'cv', number: '03', icon: BookOpenIcon },
+  { id: 'portfolio', number: '04', icon: GlobeIcon },
 ];
 
 export default function LandingScreen({ onSelect }) {
@@ -47,7 +49,7 @@ export default function LandingScreen({ onSelect }) {
 
         <Box className="home-options">
           {OPTIONS.map(({ id, number, icon: Icon }) => {
-            const title = id === 'resume' ? 'Resume' : id === 'cv' ? 'CV' : 'Portfolio';
+            const title = id === 'studentInternship' ? t('landing.studentInternship.title') : id === 'resume' ? 'Resume' : id === 'cv' ? 'CV' : 'Portfolio';
             return (
               <Box component="article" key={id} className="home-option">
                 <Box className="home-option-number">{number}</Box>

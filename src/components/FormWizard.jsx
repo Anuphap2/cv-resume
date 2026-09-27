@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { 
   Box, 
   Typography, 
@@ -23,13 +23,13 @@ import {
   VisibilityOff as EyeOffIcon, 
   Star as StarIcon 
 } from '@mui/icons-material';
-import { pdf } from '@react-pdf/renderer';
 
 import ThemeSelector from './ui/ThemeSelector';
 import { useLanguage } from '../i18n';
 
 import PersonalInfoStep from './steps/PersonalInfoStep';
 import SummaryStep from './steps/SummaryStep';
+import ResumeTargetingStep from './steps/ResumeTargetingStep';
 import ExperienceStep from './steps/ExperienceStep';
 import EducationStep from './steps/EducationStep';
 import SkillsStep from './steps/SkillsStep';
@@ -37,16 +37,13 @@ import ProjectsStep from './steps/ProjectsStep';
 import PublicationsStep from './steps/PublicationsStep';
 import CertificationsStep from './steps/CertificationsStep';
 import LanguagesStep from './steps/LanguagesStep';
+import CustomSectionsStep from './steps/CustomSectionsStep';
 
 import ResumePreview from './preview/ResumePreview';
 import CVPreview from './preview/CVPreview';
 import PortfolioPreview from './preview/PortfolioPreview';
 import PaginatedPreview from './preview/PaginatedPreview';
 
-import ResumeClassicPDF from './templates/ResumeClassic';
-import ResumeModernPDF from './templates/ResumeModern';
-import CVAcademicPDF from './templates/CVAcademic';
-import CVProfessionalPDF from './templates/CVProfessional';
 
 import { ACCENT_COLORS, SAMPLE_RESUME_DATA, SAMPLE_PORTFOLIO_DATA } from '../data/defaultData';
 import { generatePortfolioHTML } from '../utils/exportPortfolio';
@@ -54,12 +51,14 @@ import { generatePortfolioHTML } from '../utils/exportPortfolio';
 const RESUME_STEPS = [
   { id: 'personal', label: 'Basics', hint: 'Your name, contact details, and profile photo.' },
   { id: 'summary', label: 'About you', hint: 'A concise introduction tailored to the role you want.' },
+  { id: 'targeting', label: 'Target & review', hint: 'Match your real experience to one job and check the wording.' },
   { id: 'experience', label: 'Work history', hint: 'Show the work you have done and the results you achieved.' },
   { id: 'education', label: 'Education', hint: 'Add the education that supports this application.' },
   { id: 'skills', label: 'Skills', hint: 'List the skills you want employers to notice first.' },
   { id: 'projects', label: 'Projects', hint: 'Add projects that prove what you can build or deliver.' },
   { id: 'certifications', label: 'Credentials', hint: 'Include certifications, awards, or professional training.' },
   { id: 'languages', label: 'Languages', hint: 'Tell people which languages you can use at work.' },
+  { id: 'customSections', label: 'Your sections', hint: 'Add and arrange extra sections for this resume.' },
   { id: 'theme', label: 'Style & download', hint: 'Choose a look, then download your finished Resume.' },
 ];
 
@@ -72,6 +71,7 @@ const CV_STEPS = [
   { id: 'research', label: 'Research', hint: 'Show active or completed research projects.' },
   { id: 'certifications', label: 'Credentials', hint: 'Include certifications, awards, or professional training.' },
   { id: 'languages', label: 'Languages', hint: 'Tell people which languages you can use at work.' },
+  { id: 'customSections', label: 'Your sections', hint: 'Add and arrange extra sections for this CV.' },
   { id: 'theme', label: 'Style & download', hint: 'Choose a look, then download your finished CV.' },
 ];
 
@@ -84,6 +84,13 @@ const PORTFOLIO_STEPS = [
   { id: 'theme', label: 'Style & download', hint: 'Choose a visual style, then download your portfolio site.' },
 ];
 
+const PDF_TEMPLATE_LOADERS = {
+  'resume-classic': () => import('./templates/ResumeClassic'),
+  'resume-modern': () => import('./templates/ResumeModern'),
+  'cv-academic': () => import('./templates/CVAcademic'),
+  'cv-professional': () => import('./templates/CVProfessional'),
+};
+
 export default function FormWizard({ docType, data, setData, onBack, onGenerated, onReset }) {
   const { language, setLanguage, t, get } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
@@ -91,6 +98,15 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
   const [accentColor, setAccentColor] = useState(ACCENT_COLORS[0]);
   const [mobilePreview, setMobilePreview] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    if (window.matchMedia('(max-width: 720px)').matches) {
+      window.scrollTo(0, 0);
+      return;
+    }
+    editorRef.current?.scrollTo(0, 0);
+  }, [currentStep]);
 
   const stepSource = docType === 'resume' ? RESUME_STEPS : docType === 'portfolio' ? PORTFOLIO_STEPS : CV_STEPS;
   const stepTranslationKey = docType === 'resume' ? 'builder.resumeSteps' : docType === 'portfolio' ? 'builder.portfolioSteps' : 'builder.cvSteps';
@@ -136,7 +152,14 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
   const handleExportPDF = async () => {
     setExporting(true);
     try {
-      const blob = await pdf(pdfDocument).toBlob();
+      const templateKey = docType === 'resume'
+        ? `resume-${template === 'modern' ? 'modern' : 'classic'}`
+        : `cv-${template === 'professional' ? 'professional' : 'academic'}`;
+      const [{ pdf }, { default: PDFTemplate }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        PDF_TEMPLATE_LOADERS[templateKey](),
+      ]);
+      const blob = await pdf(<PDFTemplate data={data} accentColor={accentColor} />).toBlob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -184,6 +207,14 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
               }
             }}
             docType={docType}
+          />
+        );
+      case 'targeting':
+        return (
+          <ResumeTargetingStep
+            data={data}
+            onChange={setData}
+            template={template}
           />
         );
       case 'experience':
@@ -244,6 +275,13 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
             onChange={(val) => updateField('languages', val)}
           />
         );
+      case 'customSections':
+        return (
+          <CustomSectionsStep
+            data={Array.isArray(data.customSections) ? data.customSections : []}
+            onChange={(val) => updateField('customSections', val)}
+          />
+        );
       case 'theme':
         return (
           <ThemeSelector
@@ -260,14 +298,6 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
   };
 
   const PreviewComponent = docType === 'resume' ? ResumePreview : docType === 'portfolio' ? PortfolioPreview : CVPreview;
-  const pdfDocument = docType === 'resume'
-    ? (template === 'modern'
-      ? <ResumeModernPDF data={data} accentColor={accentColor} />
-      : <ResumeClassicPDF data={data} accentColor={accentColor} />)
-    : (template === 'professional'
-      ? <CVProfessionalPDF data={data} accentColor={accentColor} />
-      : <CVAcademicPDF data={data} accentColor={accentColor} />);
-
   const getDocTypeLabel = () => {
     if (docType === 'resume') return 'Resume';
     if (docType === 'portfolio') return 'Portfolio Website';
@@ -342,10 +372,19 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
           </Box>
         </Box>
 
-        <Box component="main" className="builder-editor">
+        <Box component="main" className="builder-editor" ref={editorRef}>
           <Box className="builder-mobile-progress">
-            <Typography>{t('common.step')} {currentStep + 1} {t('common.of')} {steps.length}</Typography>
-            <Typography>{currentStepInfo.label}</Typography>
+            <Box className="builder-mobile-progress-copy">
+              <Typography>{t('common.step')} {currentStep + 1} {t('common.of')} {steps.length}</Typography>
+              <Typography>{currentStepInfo.label}</Typography>
+            </Box>
+            <Button
+              className="builder-mobile-preview-toggle"
+              startIcon={mobilePreview ? <EyeOffIcon /> : <EyeIcon />}
+              onClick={() => setMobilePreview(!mobilePreview)}
+            >
+              {mobilePreview ? t('common.closePreview') : t('common.preview')}
+            </Button>
           </Box>
           <Box className="builder-editor-surface">
             <Box className="builder-editor-heading">
@@ -392,11 +431,6 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
         </Box>
       </Box>
 
-      <Box className="builder-mobile-preview-button">
-        <Button startIcon={mobilePreview ? <EyeOffIcon /> : <EyeIcon />} onClick={() => setMobilePreview(!mobilePreview)}>
-          {mobilePreview ? t('common.closePreview') : t('common.preview')}
-        </Button>
-      </Box>
     </Box>
   );
 }

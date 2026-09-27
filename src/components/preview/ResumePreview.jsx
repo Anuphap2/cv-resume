@@ -10,6 +10,7 @@ export default function ResumePreview({ data, accentColor, template, pageSection
   });
   const hasEntryContent = (entry) => Object.values(entry).some((v) => typeof v === 'string' && v.trim() !== '' && v !== entry.id);
   const showSection = (index) => pageSections === null || pageSections.includes(String(index));
+  const showCustomSection = (id) => pageSections === null || pageSections.includes(`custom-${id}`);
 
   const pi = data.personalInfo;
   const contactItems = [pi.email, pi.phone, pi.location, pi.linkedin, pi.website, pi.github].filter(Boolean);
@@ -119,7 +120,7 @@ export default function ResumePreview({ data, accentColor, template, pageSection
               skill.items && (
                 <div className="prev-skill-row" key={skill.id}>
                   <span className="prev-skill-cat">{skill.category}:</span>
-                  <span className="prev-skill-items">{skill.items}</span>
+                  <span className="prev-skill-items">{skill.items}{skill.evidence ? <small className="prev-skill-evidence">{skill.evidence}</small> : null}</span>
                 </div>
               )
             ))}
@@ -193,6 +194,18 @@ export default function ResumePreview({ data, accentColor, template, pageSection
           </div>
         </div>
       )}
+      {(Array.isArray(data.customSections) ? data.customSections : []).map((section) => (
+        showCustomSection(section.id) && (section.title?.trim() || section.content?.trim()) ? (
+          <div className="prev-section" data-preview-block={`custom-${section.id}`} key={section.id}>
+            {section.title?.trim() && (
+              <div className="prev-section-title" style={{ borderColor: color, color }}>
+                {section.title}
+              </div>
+            )}
+            {section.content?.trim() && <div className="prev-entry-desc">{section.content}</div>}
+          </div>
+        ) : null
+      ))}
     </div>
   );
 }

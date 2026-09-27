@@ -255,6 +255,7 @@ export default function PortfolioPreview({ data, accentColor, template }) {
                       </span>
                     ))}
                   </div>
+                  {skill.evidence && <p style={{ margin: '8px 0 0', color: theme.text, fontSize: '0.75rem', lineHeight: 1.5 }}>{skill.evidence}</p>}
                 </div>
               )
             ))}
