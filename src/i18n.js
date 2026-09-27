@@ -1,6 +1,37 @@
-import { createContext, useContext, useMemo, useState, createElement } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, createElement } from 'react';
 
 const LANGUAGE_STORAGE_KEY = 'cv-studio-language-v1';
+const SEO_METADATA = {
+  th: {
+    title: 'สร้าง Resume และ CV ฟรี พร้อมดาวน์โหลด PDF | CV Studio',
+    description: 'สร้าง Resume, Academic CV, CV ฝึกงาน และ Portfolio ฟรี เลือกภาษาไทยหรืออังกฤษ ดาวน์โหลด PDF ได้ทันที ข้อมูลของคุณประมวลผลและเก็บไว้ในเบราว์เซอร์',
+    locale: 'th_TH',
+  },
+  en: {
+    title: 'Free Resume & CV Builder with PDF Export | CV Studio',
+    description: 'Create a resume, academic CV, internship CV, or portfolio for free. Choose Thai or English and export to PDF. Your information stays in your browser.',
+    locale: 'en_US',
+  },
+};
+
+const updateSEOMetadata = (language) => {
+  const metadata = SEO_METADATA[language];
+  document.documentElement.lang = language;
+  document.title = metadata.title;
+
+  const values = [
+    ['meta[name="description"]', metadata.description],
+    ['meta[property="og:title"]', metadata.title],
+    ['meta[property="og:description"]', metadata.description],
+    ['meta[property="og:locale"]', metadata.locale],
+    ['meta[name="twitter:title"]', metadata.title],
+    ['meta[name="twitter:description"]', metadata.description],
+  ];
+
+  for (const [selector, content] of values) {
+    document.querySelector(selector)?.setAttribute('content', content);
+  }
+};
 
 const messages = {
   en: {
@@ -614,6 +645,10 @@ export function LanguageProvider({ children }) {
     }
     return navigator.language?.toLowerCase().startsWith('th') ? 'th' : 'en';
   });
+
+  useEffect(() => {
+    updateSEOMetadata(language);
+  }, [language]);
 
   const changeLanguage = (nextLanguage) => {
     const next = nextLanguage === 'th' ? 'th' : 'en';
