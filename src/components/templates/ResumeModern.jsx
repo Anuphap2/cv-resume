@@ -8,31 +8,31 @@ const createStyles = (accentColor, fonts) =>
   StyleSheet.create({
     page: {
       fontFamily: fonts.regular,
-      fontSize: 9.5,
+      fontSize: 9,
       color: '#1a1a1a',
-      lineHeight: 1.5,
+      lineHeight: 1.25,
     },
     headerBg: {
       backgroundColor: accentColor,
-      paddingTop: 28,
-      paddingBottom: 20,
+      paddingTop: 22,
+      paddingBottom: 14,
       paddingLeft: 40,
       paddingRight: 40,
-      marginBottom: 14,
+      marginBottom: 8,
     },
     name: {
-      fontSize: 24,
+      fontSize: 21,
       fontFamily: fonts.bold,
       color: '#ffffff',
       letterSpacing: -0.5,
       lineHeight: 1.08,
-      marginBottom: 7,
+      marginBottom: 4,
     },
     jobTitle: {
       fontSize: 11,
       color: 'rgba(255,255,255,0.85)',
       lineHeight: 1.25,
-      marginBottom: 8,
+      marginBottom: 4,
     },
     contactRow: {
       flexDirection: 'row',
@@ -45,7 +45,7 @@ const createStyles = (accentColor, fonts) =>
     },
     body: {
       paddingTop: 0,
-      paddingBottom: 36,
+      paddingBottom: 28,
       paddingLeft: 40,
       paddingRight: 40,
     },
@@ -55,11 +55,11 @@ const createStyles = (accentColor, fonts) =>
       color: accentColor,
       textTransform: 'uppercase',
       letterSpacing: fonts.regular === 'Sarabun' ? 0 : 1,
-      paddingBottom: 3,
+      paddingBottom: 2,
       borderBottomWidth: 2,
       borderBottomColor: accentColor,
-      marginBottom: 6,
-      marginTop: 10,
+      marginBottom: 4,
+      marginTop: 6,
     },
     entryRow: {
       flexDirection: 'row',
@@ -88,12 +88,12 @@ const createStyles = (accentColor, fonts) =>
       fontSize: 8.5,
       color: '#444',
       marginTop: 2,
-      marginBottom: 6,
-      lineHeight: 1.5,
+      marginBottom: 2,
+      lineHeight: 1.25,
     },
     skillRow: {
       flexDirection: 'row',
-      marginBottom: 2,
+      marginBottom: 1,
     },
     skillCategory: {
       fontSize: 9,
@@ -126,7 +126,7 @@ const createStyles = (accentColor, fonts) =>
       fontSize: 8,
     },
     entry: {
-      marginBottom: 6,
+      marginBottom: 3,
     },
   });
 

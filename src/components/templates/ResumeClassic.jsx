@@ -7,31 +7,31 @@ import { getPdfFonts } from '../../utils/pdfFonts';
 const createStyles = (accentColor, fonts) =>
   StyleSheet.create({
     page: {
-      paddingTop: 36,
-      paddingBottom: 36,
+      paddingTop: 28,
+      paddingBottom: 28,
       paddingLeft: 40,
       paddingRight: 40,
       fontFamily: fonts.regular,
-      fontSize: 9.5,
+      fontSize: 9,
       color: '#1a1a1a',
-      lineHeight: 1.5,
+      lineHeight: 1.25,
     },
     header: {
-      marginBottom: 14,
+      marginBottom: 8,
     },
     name: {
-      fontSize: 22,
+      fontSize: 20,
       fontFamily: fonts.bold,
       color: accentColor,
       letterSpacing: -0.5,
       lineHeight: 1.08,
-      marginBottom: 6,
+      marginBottom: 4,
     },
     jobTitle: {
       fontSize: 11,
       color: '#555',
       lineHeight: 1.25,
-      marginBottom: 8,
+      marginBottom: 4,
     },
     contactRow: {
       flexDirection: 'row',
@@ -48,11 +48,11 @@ const createStyles = (accentColor, fonts) =>
       color: accentColor,
       textTransform: 'uppercase',
       letterSpacing: fonts.regular === 'Sarabun' ? 0 : 1,
-      paddingBottom: 3,
+      paddingBottom: 2,
       borderBottomWidth: 1.5,
       borderBottomColor: accentColor,
-      marginBottom: 6,
-      marginTop: 10,
+      marginBottom: 4,
+      marginTop: 6,
     },
     entryRow: {
       flexDirection: 'row',
@@ -81,12 +81,12 @@ const createStyles = (accentColor, fonts) =>
       fontSize: 8.5,
       color: '#444',
       marginTop: 2,
-      marginBottom: 6,
-      lineHeight: 1.5,
+      marginBottom: 2,
+      lineHeight: 1.25,
     },
     skillRow: {
       flexDirection: 'row',
-      marginBottom: 2,
+      marginBottom: 1,
     },
     skillCategory: {
       fontSize: 9,
@@ -121,7 +121,7 @@ const createStyles = (accentColor, fonts) =>
       fontSize: 8,
     },
     entry: {
-      marginBottom: 6,
+      marginBottom: 3,
     },
   });
 
