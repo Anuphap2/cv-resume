@@ -1,10 +1,6 @@
 import { Children } from 'react';
-import { Document, Font, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
-import SarabunRegular from '@fontsource/sarabun/files/sarabun-thai-400-normal.woff';
-import SarabunBold from '@fontsource/sarabun/files/sarabun-thai-700-normal.woff';
-
-Font.register({ family: 'Sarabun', src: SarabunRegular, fontWeight: 400 });
-Font.register({ family: 'Sarabun', src: SarabunBold, fontWeight: 700 });
+import { Document, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
+import '../utils/pdfFonts';
 
 const styles = StyleSheet.create({
   page: { paddingTop: 25, paddingBottom: 28, paddingHorizontal: 38, fontFamily: 'Sarabun', fontSize: 9.5, lineHeight: 1.35, color: '#111' },

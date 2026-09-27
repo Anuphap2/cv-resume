@@ -89,6 +89,30 @@ const readStudentDraft = () => {
   }
 };
 
+const createDocumentDraft = (data, activeVersion = 'th') => ({
+  versions: { th: structuredClone(data), en: structuredClone(data) },
+  activeVersion,
+});
+
+const readVersionedDraft = (type, fallback) => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || 'null');
+    if (saved?.type !== type) return createDocumentDraft(fallback);
+
+    const thaiData = saved.versions?.th || saved.data || fallback;
+    const englishData = saved.versions?.en || saved.data || thaiData;
+    return {
+      versions: {
+        th: structuredClone(thaiData),
+        en: structuredClone(englishData),
+      },
+      activeVersion: saved.activeVersion === 'en' ? 'en' : 'th',
+    };
+  } catch {
+    return createDocumentDraft(fallback);
+  }
+};
+
 const readDraft = (type, fallback) => {
   try {
     const saved = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || 'null');
@@ -100,10 +124,22 @@ const readDraft = (type, fallback) => {
 
 export default function App() {
   const [docType, setDocType] = useState(null); // Existing document modes and the isolated student internship workflow.
-  const [resumeData, setResumeData] = useState(() => readDraft('resume', defaultResumeData));
-  const [cvData, setCVData] = useState(() => readDraft('cv', defaultCVData));
+  const [resumeDraft, setResumeDraft] = useState(() => readVersionedDraft('resume', defaultResumeData));
+  const [cvDraft, setCVDraft] = useState(() => readVersionedDraft('cv', defaultCVData));
   const [portfolioData, setPortfolioData] = useState(() => readDraft('portfolio', defaultPortfolioData));
   const [studentData, setStudentData] = useState(readStudentDraft);
+
+  const updateActiveVersion = (setDraft) => (nextData) => {
+    setDraft((previous) => {
+      const currentVersion = previous.activeVersion;
+      const currentData = previous.versions[currentVersion];
+      const value = typeof nextData === 'function' ? nextData(currentData) : nextData;
+      return { ...previous, versions: { ...previous.versions, [currentVersion]: value } };
+    });
+  };
+
+  const setResumeData = updateActiveVersion(setResumeDraft);
+  const setCVData = updateActiveVersion(setCVDraft);
 
   const handleSelect = (type) => {
     setDocType(type);
@@ -119,13 +155,17 @@ export default function App() {
     try {
       if (docType === 'studentInternship') {
         localStorage.setItem(STUDENT_DRAFT_STORAGE_KEY, JSON.stringify(studentData));
+      } else if (docType === 'resume') {
+        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ type: docType, ...resumeDraft }));
+      } else if (docType === 'cv') {
+        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ type: docType, ...cvDraft }));
       } else {
         localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ type: docType, data: getData() }));
       }
     } catch (error) {
       console.warn('Local draft could not be saved:', error);
     }
-  }, [docType, resumeData, cvData, portfolioData, studentData]);
+  }, [docType, resumeDraft, cvDraft, portfolioData, studentData]);
 
   const handleGenerated = () => {
     // Keep the current draft and stay in the builder after download so users can
@@ -147,17 +187,17 @@ export default function App() {
     } catch {
       // Ignore storage errors and still reset the in-memory form.
     }
-    if (docType === 'resume') setResumeData(structuredClone(defaultResumeData));
-    if (docType === 'cv') setCVData(structuredClone(defaultCVData));
+    if (docType === 'resume') setResumeDraft(createDocumentDraft(defaultResumeData));
+    if (docType === 'cv') setCVDraft(createDocumentDraft(defaultCVData));
     if (docType === 'portfolio') setPortfolioData(structuredClone(defaultPortfolioData));
     setDocType(null);
   };
 
   const getData = () => {
-    if (docType === 'resume') return resumeData;
+    if (docType === 'resume') return resumeDraft.versions[resumeDraft.activeVersion];
     if (docType === 'portfolio') return portfolioData;
     if (docType === 'studentInternship') return studentData;
-    return cvData;
+    return cvDraft.versions[cvDraft.activeVersion];
   };
 
   const getDataSetter = () => {
@@ -165,6 +205,20 @@ export default function App() {
     if (docType === 'portfolio') return setPortfolioData;
     if (docType === 'studentInternship') return setStudentData;
     return setCVData;
+  };
+
+  const getDocumentVersion = () => docType === 'resume' ? resumeDraft.activeVersion : cvDraft.activeVersion;
+  const setDocumentVersion = (version) => {
+    if (docType === 'resume') setResumeDraft((previous) => ({ ...previous, activeVersion: version }));
+    if (docType === 'cv') setCVDraft((previous) => ({ ...previous, activeVersion: version }));
+  };
+  const copyDocumentVersion = (targetVersion, sourceData) => {
+    if (targetVersion !== 'th' && targetVersion !== 'en') return;
+    const setDraft = docType === 'resume' ? setResumeDraft : setCVDraft;
+    setDraft((previous) => ({
+      ...previous,
+      versions: { ...previous.versions, [targetVersion]: structuredClone(sourceData) },
+    }));
   };
 
   const content = !docType ? (
@@ -181,6 +235,9 @@ export default function App() {
         onBack={handleBack}
         onGenerated={handleGenerated}
         onReset={handleReset}
+        contentVersion={docType === 'resume' || docType === 'cv' ? getDocumentVersion() : null}
+        onContentVersionChange={setDocumentVersion}
+        onCopyContentVersion={copyDocumentVersion}
       /></Suspense>
   );
 

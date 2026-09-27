@@ -1,11 +1,13 @@
 import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
 import { formatDateRange } from '../../utils/formatDates';
 import CustomSectionsPDF from './CustomSectionsPDF';
+import { getDocumentLabels } from '../../utils/documentLabels';
+import { getPdfFonts } from '../../utils/pdfFonts';
 
-const createStyles = (accentColor) =>
+const createStyles = (accentColor, fonts) =>
   StyleSheet.create({
     page: {
-      fontFamily: 'Helvetica',
+      fontFamily: fonts.regular,
       fontSize: 9.5,
       color: '#1a1a1a',
       lineHeight: 1.5,
@@ -21,7 +23,7 @@ const createStyles = (accentColor) =>
     },
     name: {
       fontSize: 22,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: fonts.bold,
       color: accentColor,
       letterSpacing: -0.5,
       lineHeight: 1.08,
@@ -50,10 +52,10 @@ const createStyles = (accentColor) =>
     },
     sectionTitle: {
       fontSize: 10,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: fonts.bold,
       color: accentColor,
       textTransform: 'uppercase',
-      letterSpacing: 1,
+      letterSpacing: fonts.regular === 'Sarabun' ? 0 : 1,
       paddingBottom: 3,
       borderBottomWidth: 1.5,
       borderBottomColor: accentColor,
@@ -68,7 +70,7 @@ const createStyles = (accentColor) =>
     },
     entryTitle: {
       fontSize: 10,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: fonts.bold,
     },
     entrySubtitle: {
       fontSize: 9,
@@ -101,7 +103,7 @@ const createStyles = (accentColor) =>
       flexWrap: 'wrap',
     },
     langName: {
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: fonts.bold,
       fontSize: 9,
     },
     langLevel: {
@@ -113,8 +115,10 @@ const createStyles = (accentColor) =>
     },
   });
 
-export default function CVProfessionalPDF({ data, accentColor }) {
-  const styles = createStyles(accentColor.value);
+export default function CVProfessionalPDF({ data, accentColor, contentLanguage = 'en' }) {
+  const labels = getDocumentLabels(contentLanguage);
+  const fonts = getPdfFonts(contentLanguage);
+  const styles = createStyles(accentColor.value, fonts);
   const pi = data.personalInfo;
   const contacts = [pi.email, pi.phone, pi.location, pi.linkedin, pi.website, pi.orcid ? `ORCID: ${pi.orcid}` : ''].filter(Boolean);
 
@@ -129,7 +133,7 @@ export default function CVProfessionalPDF({ data, accentColor }) {
         <View style={styles.headerBg}>
           <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
             <View style={{ flex: 1, paddingTop: 2 }}>
-              <Text style={styles.name}>{pi.fullName || 'Your Name'}</Text>
+              <Text style={styles.name}>{pi.fullName || labels.yourName}</Text>
               {pi.title ? <Text style={styles.title}>{pi.title}</Text> : null}
               {contacts.length > 0 && <View style={styles.contactRow}>{contacts.map((c, i) => <Text key={i} style={styles.contactItem}>{c}</Text>)}</View>}
             </View>
@@ -140,14 +144,14 @@ export default function CVProfessionalPDF({ data, accentColor }) {
         <View style={styles.body}>
           {data.profile ? (
             <View>
-              <Text style={styles.sectionTitle}>Professional Profile</Text>
+              <Text style={styles.sectionTitle}>{labels.professionalProfile}</Text>
               <Text style={styles.entryDesc}>{data.profile}</Text>
             </View>
           ) : null}
 
           {hasEntries(data.education) && (
             <View>
-              <Text style={styles.sectionTitle}>Education</Text>
+              <Text style={styles.sectionTitle}>{labels.education}</Text>
               {data.education.map((edu) => (
                 hasEntryContent(edu) ? (
                   <View key={edu.id} style={styles.entry} wrap={false}>
@@ -162,10 +166,10 @@ export default function CVProfessionalPDF({ data, accentColor }) {
                         {edu.startDate}{edu.startDate && edu.endDate ? ' — ' : ''}{edu.endDate}
                       </Text>
                     </View>
-                    {edu.thesis ? <Text style={styles.entryDesc}>Thesis: {edu.thesis}</Text> : null}
+                    {edu.thesis ? <Text style={styles.entryDesc}>{labels.thesis}: {edu.thesis}</Text> : null}
                     {edu.advisor ? (
                       <Text style={{ ...styles.entryDesc, fontSize: 8, color: '#777' }}>
-                        Advisor: {edu.advisor}
+                        {labels.advisor}: {edu.advisor}
                       </Text>
                     ) : null}
                   </View>
@@ -176,7 +180,7 @@ export default function CVProfessionalPDF({ data, accentColor }) {
 
           {hasEntries(data.experience) && (
             <View>
-              <Text style={styles.sectionTitle}>Professional Experience</Text>
+              <Text style={styles.sectionTitle}>{labels.professionalExperience}</Text>
               {data.experience.map((exp) => (
               hasEntryContent(exp) ? (
                   <View key={exp.id} style={styles.entry} wrap={false}>
@@ -198,7 +202,7 @@ export default function CVProfessionalPDF({ data, accentColor }) {
 
           {hasEntries(data.publications) && (
             <View>
-              <Text style={styles.sectionTitle}>Publications</Text>
+              <Text style={styles.sectionTitle}>{labels.publications}</Text>
               {data.publications.map((pub, i) => (
               hasEntryContent(pub) ? (
                   <View key={pub.id}>
@@ -216,7 +220,7 @@ export default function CVProfessionalPDF({ data, accentColor }) {
 
           {hasEntries(data.research) && (
             <View>
-              <Text style={styles.sectionTitle}>Research Projects</Text>
+              <Text style={styles.sectionTitle}>{labels.researchProjects}</Text>
               {data.research.map((res) => (
               hasEntryContent(res) ? (
                   <View key={res.id} style={styles.entry} wrap={false}>
@@ -240,7 +244,7 @@ export default function CVProfessionalPDF({ data, accentColor }) {
 
           {hasEntries(data.teaching) && (
             <View>
-              <Text style={styles.sectionTitle}>Teaching Experience</Text>
+              <Text style={styles.sectionTitle}>{labels.teachingExperience}</Text>
               {data.teaching.map((t) => (
               hasEntryContent(t) ? (
                   <View key={t.id} style={styles.entry} wrap={false}>
@@ -261,7 +265,7 @@ export default function CVProfessionalPDF({ data, accentColor }) {
 
           {hasEntries(data.certifications) && (
             <View>
-              <Text style={styles.sectionTitle}>Certifications & Awards</Text>
+              <Text style={styles.sectionTitle}>{labels.certificationsAwards}</Text>
               {data.certifications.map((cert) => (
               hasEntryContent(cert) ? (
                   <View key={cert.id} style={styles.entry} wrap={false}>
@@ -270,7 +274,7 @@ export default function CVProfessionalPDF({ data, accentColor }) {
                       <Text style={styles.entryDate}>{cert.date}</Text>
                     </View>
                   {cert.issuer ? <Text style={styles.entrySubtitle}>{cert.issuer}</Text> : null}
-                  {cert.url ? <Text style={{ ...styles.entryDesc, fontSize: 8, color: '#777' }}>Link: {cert.url}</Text> : null}
+                  {cert.url ? <Text style={{ ...styles.entryDesc, fontSize: 8, color: '#777' }}>{labels.link}: {cert.url}</Text> : null}
                   </View>
                 ) : null
               ))}
@@ -279,7 +283,7 @@ export default function CVProfessionalPDF({ data, accentColor }) {
 
           {data.languages?.some((lang) => lang.language?.trim()) && (
             <View>
-              <Text style={styles.sectionTitle}>Languages</Text>
+              <Text style={styles.sectionTitle}>{labels.languages}</Text>
               <View style={styles.langRow}>
                 {data.languages.map((lang) => (
                 hasEntryContent(lang) ? (

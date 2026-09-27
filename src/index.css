@@ -532,6 +532,23 @@ button { -webkit-tap-highlight-color: transparent; }
 .builder-editor { background: #f1f2f5; }
 .builder-editor-surface { min-height: 100%; padding: 0 0 32px; }
 .builder-editor-heading { max-width: 900px; padding: 34px 42px 18px; }
+.document-version-control {
+  display: flex;
+  max-width: 900px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 42px 0;
+}
+.document-version-copy { min-width: 0; }
+.document-version-title { color: #20242b; font-size: 0.95rem !important; font-weight: 700 !important; }
+.document-version-hint { margin-top: 3px !important; color: #555b64; font-size: 0.78rem !important; line-height: 1.45 !important; }
+.document-version-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 8px; }
+.document-version-options { flex: 0 0 auto; padding: 3px; border: 1px solid #d9dce2; border-radius: 12px; background: #f4f5f7; }
+.document-version-options .MuiToggleButton-root { min-width: 90px; padding: 7px 14px; border: 0 !important; border-radius: 9px !important; color: #454b55; font-size: 0.82rem; font-weight: 650; text-transform: none; }
+.document-version-options .MuiToggleButton-root.Mui-selected { background: #fff; color: #1c2936; box-shadow: 0 1px 4px rgba(24, 33, 46, 0.13); }
+.document-version-options .MuiToggleButton-root.Mui-selected:hover { background: #fff; }
+.document-version-copy-action { min-width: max-content; color: #35485e !important; font-size: 0.77rem !important; font-weight: 650 !important; }
 .builder-editor-title { max-width: 720px; font-size: clamp(1.3rem, 2vw, 1.9rem) !important; letter-spacing: -0.03em; }
 .builder-form-content {
   max-width: 900px;
@@ -602,7 +619,11 @@ button { -webkit-tap-highlight-color: transparent; }
     padding: 22px 18px 18px;
     border-radius: 16px;
   }
-  .builder-editor-heading { padding: 24px 18px 16px; }
+  .builder-editor-heading { padding: 20px 18px 16px; }
+  .document-version-control { align-items: flex-start; flex-direction: column; gap: 12px; padding: 20px 18px 0; }
+  .document-version-actions { width: 100%; flex-wrap: wrap; }
+  .document-version-options { flex: 1 1 100%; }
+  .document-version-options .MuiToggleButton-root { flex: 1; }
 .builder-navigation { position: static; margin: 28px -18px -18px; padding: 14px 18px calc(14px + env(safe-area-inset-bottom)); }
 }
 

@@ -13,6 +13,8 @@ import {
   Chip,
   Paper,
   LinearProgress,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import { 
   ArrowBack as ArrowLeftIcon, 
@@ -21,7 +23,8 @@ import {
   Download as DownloadIcon, 
   Visibility as EyeIcon, 
   VisibilityOff as EyeOffIcon, 
-  Star as StarIcon 
+  Star as StarIcon,
+  ContentCopy as ContentCopyIcon,
 } from '@mui/icons-material';
 
 import ThemeSelector from './ui/ThemeSelector';
@@ -91,7 +94,7 @@ const PDF_TEMPLATE_LOADERS = {
   'cv-professional': () => import('./templates/CVProfessional'),
 };
 
-export default function FormWizard({ docType, data, setData, onBack, onGenerated, onReset }) {
+export default function FormWizard({ docType, data, setData, onBack, onGenerated, onReset, contentVersion = 'th', onContentVersionChange, onCopyContentVersion }) {
   const { language, setLanguage, t, get } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
   const [template, setTemplate] = useState(docType === 'resume' ? 'classic' : docType === 'portfolio' ? 'glassmorphism' : 'academic');
@@ -159,12 +162,12 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
         import('@react-pdf/renderer'),
         PDF_TEMPLATE_LOADERS[templateKey](),
       ]);
-      const blob = await pdf(<PDFTemplate data={data} accentColor={accentColor} />).toBlob();
+      const blob = await pdf(<PDFTemplate data={data} accentColor={accentColor} contentLanguage={contentVersion} />).toBlob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       const name = data.personalInfo.fullName || 'document';
-      link.download = `${name.replace(/\s+/g, '_')}_${docType}.pdf`;
+      link.download = `${name.replace(/\s+/g, '_')}_${docType}_${contentVersion}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -313,6 +316,11 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
       {exporting ? t('common.preparingPdf') : t('common.downloadPdf')}
     </Button>
   );
+  const copyTargetVersion = contentVersion === 'th' ? 'en' : 'th';
+  const copyVersion = () => {
+    const confirmationKey = copyTargetVersion === 'en' ? 'common.confirmCopyToEnglish' : 'common.confirmCopyToThai';
+    if (window.confirm(t(confirmationKey))) onCopyContentVersion?.(copyTargetVersion, data);
+  };
 
   return (
     <Box className="builder-shell">
@@ -387,6 +395,35 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
             </Button>
           </Box>
           <Box className="builder-editor-surface">
+            {(docType === 'resume' || docType === 'cv') && (
+              <Box className="document-version-control">
+                <Box className="document-version-copy">
+                  <Typography className="document-version-title">{t('common.documentLanguage')}</Typography>
+                  <Typography className="document-version-hint">{t('common.documentLanguageHint')}</Typography>
+                </Box>
+                <Box className="document-version-actions">
+                  <ToggleButtonGroup
+                    exclusive
+                    size="small"
+                    value={contentVersion}
+                    onChange={(_, value) => value && onContentVersionChange?.(value)}
+                    aria-label={t('common.documentLanguage')}
+                    className="document-version-options"
+                  >
+                    <ToggleButton value="th">ไทย</ToggleButton>
+                    <ToggleButton value="en">English</ToggleButton>
+                  </ToggleButtonGroup>
+                  <Button
+                    size="small"
+                    startIcon={<ContentCopyIcon />}
+                    onClick={copyVersion}
+                    className="document-version-copy-action"
+                  >
+                    {t(copyTargetVersion === 'en' ? 'common.copyToEnglish' : 'common.copyToThai')}
+                  </Button>
+                </Box>
+              </Box>
+            )}
             <Box className="builder-editor-heading">
               <Typography className="builder-editor-kicker">{currentStepInfo.label}</Typography>
               <Typography variant="h4" className="builder-editor-title">{currentStepInfo.hint}</Typography>
@@ -420,10 +457,10 @@ export default function FormWizard({ docType, data, setData, onBack, onGenerated
           <Box className="builder-preview-stage">
             <Paper elevation={0} className={`builder-preview-paper ${docType === 'portfolio' ? 'portfolio-preview-paper' : 'document-preview-paper'}`}>
               {docType === 'portfolio' ? (
-                <PreviewComponent data={data} accentColor={accentColor} template={template} />
-              ) : (
-                <PaginatedPreview>
-                  <PreviewComponent data={data} accentColor={accentColor} template={template} />
+                  <PreviewComponent data={data} accentColor={accentColor} template={template} contentLanguage={contentVersion} />
+                ) : (
+                  <PaginatedPreview>
+                    <PreviewComponent data={data} accentColor={accentColor} template={template} contentLanguage={contentVersion} />
                 </PaginatedPreview>
               )}
             </Paper>

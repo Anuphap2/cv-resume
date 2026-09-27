@@ -1,8 +1,10 @@
 import { formatDateRange } from '../../utils/formatDates';
+import { getDocumentLabels } from '../../utils/documentLabels';
 
-export default function CVPreview({ data, accentColor, template, pageSections = null, showHeader = true }) {
+export default function CVPreview({ data, accentColor, template, contentLanguage = 'en', pageSections = null, showHeader = true }) {
   const color = accentColor.value;
   const isProfessional = template === "professional";
+  const labels = getDocumentLabels(contentLanguage);
 
   const hasContent = (arr) =>
     arr &&
@@ -35,7 +37,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
         <div className="prev-header-row">
           <div className="prev-header-copy">
             <div className="prev-name" style={{ color }}>
-              {pi.fullName || "Your Name"}
+              {pi.fullName || labels.yourName}
             </div>
             {pi.title && <div className="prev-title">{pi.title}</div>}
             {contactItems.length > 0 && (
@@ -57,7 +59,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
             className="prev-section-title"
             style={{ borderColor: color, color }}
           >
-            PROFESSIONAL PROFILE
+            {labels.professionalProfile}
           </div>
           <div className="prev-entry-desc">{data.profile}</div>
         </div>
@@ -70,7 +72,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
             className="prev-section-title"
             style={{ borderColor: color, color }}
           >
-            EDUCATION
+            {labels.education}
           </div>
           {data.education.map(
             (edu) =>
@@ -94,14 +96,14 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
                     </div>
                   </div>
                   {edu.thesis && (
-                    <div className="prev-entry-desc">Thesis: {edu.thesis}</div>
+                    <div className="prev-entry-desc">{labels.thesis}: {edu.thesis}</div>
                   )}
                   {edu.advisor && (
                     <div
                       className="prev-entry-desc"
                       style={{ fontSize: "7.5px", color: "#777" }}
                     >
-                      Advisor: {edu.advisor}
+                      {labels.advisor}: {edu.advisor}
                     </div>
                   )}
                   {edu.gpa && (
@@ -109,7 +111,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
                       className="prev-entry-desc"
                       style={{ fontSize: "7.5px", color: "#777" }}
                     >
-                      GPA: {edu.gpa}
+                      {labels.gpa}: {edu.gpa}
                     </div>
                   )}
                 </div>
@@ -125,7 +127,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
             className="prev-section-title"
             style={{ borderColor: color, color }}
           >
-            PROFESSIONAL EXPERIENCE
+            {labels.professionalExperience}
           </div>
           {data.experience.map(
             (exp) =>
@@ -158,7 +160,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
             className="prev-section-title"
             style={{ borderColor: color, color }}
           >
-            PUBLICATIONS
+            {labels.publications}
           </div>
           {data.publications.map(
             (pub, i) =>
@@ -189,7 +191,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
             className="prev-section-title"
             style={{ borderColor: color, color }}
           >
-            RESEARCH PROJECTS
+            {labels.researchProjects}
           </div>
           {data.research.map(
             (res) =>
@@ -226,7 +228,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
             className="prev-section-title"
             style={{ borderColor: color, color }}
           >
-            CERTIFICATIONS & AWARDS
+            {labels.certificationsAwards}
           </div>
           {data.certifications.map(
             (cert) =>
@@ -252,7 +254,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
             className="prev-section-title"
             style={{ borderColor: color, color }}
           >
-            TEACHING EXPERIENCE
+            {labels.teachingExperience}
           </div>
           {data.teaching.map(
             (t) =>
@@ -282,7 +284,7 @@ export default function CVPreview({ data, accentColor, template, pageSections = 
             className="prev-section-title"
             style={{ borderColor: color, color }}
           >
-            LANGUAGES
+            {labels.languages}
           </div>
           <div className="prev-languages">
             {data.languages.map(

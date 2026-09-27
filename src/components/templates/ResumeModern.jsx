@@ -1,11 +1,13 @@
 import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
 import { formatDateRange } from '../../utils/formatDates';
 import CustomSectionsPDF from './CustomSectionsPDF';
+import { getDocumentLabels } from '../../utils/documentLabels';
+import { getPdfFonts } from '../../utils/pdfFonts';
 
-const createStyles = (accentColor) =>
+const createStyles = (accentColor, fonts) =>
   StyleSheet.create({
     page: {
-      fontFamily: 'Helvetica',
+      fontFamily: fonts.regular,
       fontSize: 9.5,
       color: '#1a1a1a',
       lineHeight: 1.5,
@@ -20,7 +22,7 @@ const createStyles = (accentColor) =>
     },
     name: {
       fontSize: 24,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: fonts.bold,
       color: '#ffffff',
       letterSpacing: -0.5,
       lineHeight: 1.08,
@@ -49,10 +51,10 @@ const createStyles = (accentColor) =>
     },
     sectionTitle: {
       fontSize: 10,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: fonts.bold,
       color: accentColor,
       textTransform: 'uppercase',
-      letterSpacing: 1,
+      letterSpacing: fonts.regular === 'Sarabun' ? 0 : 1,
       paddingBottom: 3,
       borderBottomWidth: 2,
       borderBottomColor: accentColor,
@@ -67,7 +69,7 @@ const createStyles = (accentColor) =>
     },
     entryTitle: {
       fontSize: 10,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: fonts.bold,
     },
     entrySubtitle: {
       fontSize: 9,
@@ -95,7 +97,7 @@ const createStyles = (accentColor) =>
     },
     skillCategory: {
       fontSize: 9,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: fonts.bold,
       width: 125,
       flexShrink: 0,
       color: '#333',
@@ -116,7 +118,7 @@ const createStyles = (accentColor) =>
       flexWrap: 'wrap',
     },
     langName: {
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: fonts.bold,
       fontSize: 9,
     },
     langLevel: {
@@ -128,8 +130,10 @@ const createStyles = (accentColor) =>
     },
   });
 
-export default function ResumeModernPDF({ data, accentColor }) {
-  const styles = createStyles(accentColor.value);
+export default function ResumeModernPDF({ data, accentColor, contentLanguage = 'en' }) {
+  const labels = getDocumentLabels(contentLanguage);
+  const fonts = getPdfFonts(contentLanguage);
+  const styles = createStyles(accentColor.value, fonts);
   const pi = data.personalInfo;
   const contacts = [pi.email, pi.phone, pi.location, pi.linkedin, pi.website, pi.github].filter(Boolean);
 
@@ -145,7 +149,7 @@ export default function ResumeModernPDF({ data, accentColor }) {
         <View style={styles.headerBg}>
           <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
             <View style={{ flex: 1, paddingTop: 2 }}>
-              <Text style={styles.name}>{pi.fullName || 'Your Name'}</Text>
+              <Text style={styles.name}>{pi.fullName || labels.yourName}</Text>
               {pi.jobTitle ? <Text style={styles.jobTitle}>{pi.jobTitle}</Text> : null}
               {contacts.length > 0 && <View style={styles.contactRow}>{contacts.map((c, i) => <Text key={i} style={styles.contactItem}>{c}</Text>)}</View>}
             </View>
@@ -156,14 +160,14 @@ export default function ResumeModernPDF({ data, accentColor }) {
         <View style={styles.body}>
           {data.summary ? (
             <View>
-              <Text style={styles.sectionTitle}>Professional Summary</Text>
+              <Text style={styles.sectionTitle}>{labels.professionalSummary}</Text>
               <Text style={styles.entryDesc}>{data.summary}</Text>
             </View>
           ) : null}
 
           {hasEntries(data.experience) && (
             <View>
-              <Text style={styles.sectionTitle}>Experience</Text>
+              <Text style={styles.sectionTitle}>{labels.experience}</Text>
               {data.experience.map((exp) => (
                 (exp.company || exp.position) ? (
                   <View key={exp.id} style={styles.entry} wrap={false}>
@@ -185,7 +189,7 @@ export default function ResumeModernPDF({ data, accentColor }) {
 
           {hasEntries(data.education) && (
             <View>
-              <Text style={styles.sectionTitle}>Education</Text>
+              <Text style={styles.sectionTitle}>{labels.education}</Text>
               {data.education.map((edu) => (
                 (edu.institution || edu.degree) ? (
                   <View key={edu.id} style={styles.entry} wrap={false}>
@@ -200,7 +204,7 @@ export default function ResumeModernPDF({ data, accentColor }) {
                         {edu.startDate}{edu.startDate && edu.endDate ? ' — ' : ''}{edu.endDate}
                       </Text>
                     </View>
-                    {edu.gpa ? <Text style={styles.entryDesc}>GPA: {edu.gpa}</Text> : null}
+                    {edu.gpa ? <Text style={styles.entryDesc}>{labels.gpa}: {edu.gpa}</Text> : null}
                   </View>
                 ) : null
               ))}
@@ -209,7 +213,7 @@ export default function ResumeModernPDF({ data, accentColor }) {
 
           {data.skills?.some((skill) => skill.items?.trim()) && (
             <View>
-              <Text style={styles.sectionTitle}>Skills</Text>
+              <Text style={styles.sectionTitle}>{labels.skills}</Text>
               {data.skills.map((skill) => (
                 skill.items ? (
                   <View key={skill.id} style={styles.skillRow}>
@@ -223,7 +227,7 @@ export default function ResumeModernPDF({ data, accentColor }) {
 
           {hasEntries(data.projects) && (
             <View>
-              <Text style={styles.sectionTitle}>Projects</Text>
+              <Text style={styles.sectionTitle}>{labels.projects}</Text>
               {data.projects.map((proj) => (
               hasEntryContent(proj) ? (
                 <View key={proj.id} style={styles.entry} wrap={false}>
@@ -231,10 +235,10 @@ export default function ResumeModernPDF({ data, accentColor }) {
                     {proj.description ? <Text style={styles.entryDesc}>{proj.description}</Text> : null}
                   {proj.technologies ? (
                       <Text style={{ ...styles.entryDesc, color: '#777', fontSize: 8 }}>
-                        Technologies: {proj.technologies}
+                        {labels.technologies}: {proj.technologies}
                       </Text>
                   ) : null}
-                  {proj.url ? <Text style={{ ...styles.entryDesc, color: '#777', fontSize: 8 }}>Link: {proj.url}</Text> : null}
+                  {proj.url ? <Text style={{ ...styles.entryDesc, color: '#777', fontSize: 8 }}>{labels.link}: {proj.url}</Text> : null}
                   </View>
                 ) : null
               ))}
@@ -243,7 +247,7 @@ export default function ResumeModernPDF({ data, accentColor }) {
 
           {hasEntries(data.certifications) && (
             <View>
-              <Text style={styles.sectionTitle}>Certifications</Text>
+              <Text style={styles.sectionTitle}>{labels.certifications}</Text>
               {data.certifications.map((cert) => (
               hasEntryContent(cert) ? (
                 <View key={cert.id} style={styles.entry} wrap={false}>
@@ -252,7 +256,7 @@ export default function ResumeModernPDF({ data, accentColor }) {
                       <Text style={styles.entryDate}>{cert.date}</Text>
                     </View>
                   {cert.issuer ? <Text style={styles.entrySubtitle}>{cert.issuer}</Text> : null}
-                  {cert.url ? <Text style={{ ...styles.entryDesc, color: '#777', fontSize: 8 }}>Link: {cert.url}</Text> : null}
+                  {cert.url ? <Text style={{ ...styles.entryDesc, color: '#777', fontSize: 8 }}>{labels.link}: {cert.url}</Text> : null}
                   </View>
                 ) : null
               ))}
@@ -261,7 +265,7 @@ export default function ResumeModernPDF({ data, accentColor }) {
 
           {data.languages?.some((lang) => lang.language?.trim()) && (
             <View>
-              <Text style={styles.sectionTitle}>Languages</Text>
+              <Text style={styles.sectionTitle}>{labels.languages}</Text>
               <View style={styles.langRow}>
                 {data.languages.map((lang) => (
                   hasEntryContent(lang) ? (

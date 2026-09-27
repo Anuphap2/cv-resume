@@ -6,7 +6,7 @@
 
 - Primary components: React/Vite single-page app; independent `FormWizard` and `StudentInternshipWizard` flows; React PDF renderer for generated CV pages.
 - External systems:
-- Data ownership: Existing resume/CV/portfolio drafts use `cv-resume-local-draft-v1`. Student internship form uses `cv-resume-student-internship-draft-v1`. Student transcript/certificate PDF blobs use IndexedDB database `cv-resume-student-attachments-v1`.
+- Data ownership: Resume and CV drafts use `cv-resume-local-draft-v1` with separate Thai and English content versions. Existing single-version resume/CV drafts are copied into both versions on first load. Portfolio drafts use the same storage key in the existing single-document format. Student internship form uses `cv-resume-student-internship-draft-v1`. Student transcript/certificate PDF blobs use IndexedDB database `cv-resume-student-attachments-v1`.
 - Critical interfaces: Student export generates a one-page CV, then uses pdf-lib to append Thai transcript, optional English transcript, and certificates in that order.
 
 ## Invariants and Constraints
@@ -20,6 +20,7 @@
 | --- | --- | --- | --- | --- |
 | Keep internship data in a separate localStorage key and PDF blobs in IndexedDB | Preserve existing user drafts and avoid placing large files in localStorage | Separate persistence layers require handling missing or unavailable attachment records | Existing drafts remain isolated; exports validate attachment availability | 2026-09-26 |
 | Bundle Anuphan for the web UI and Sarabun for PDF output | Thai UI readability and university-form document typography have separate needs | Two font families add assets and license files | Font roles are explicit and each family is self-hosted | 2026-09-26 |
+| Keep Thai and English resume/CV content in independent versions | Users need localized documents without automatic translation overwriting original wording | Content must be translated or entered separately by the user | The active version controls preview and PDF language while existing single-version drafts seed both versions | 2026-09-27 |
 
 ## Change Guidance
 
