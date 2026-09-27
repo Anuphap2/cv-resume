@@ -8,13 +8,13 @@ const createStyles = (accentColor, fonts) =>
   StyleSheet.create({
     page: {
       paddingTop: 28,
-      paddingBottom: 28,
-      paddingLeft: 40,
-      paddingRight: 40,
+      paddingBottom: 24,
+      paddingLeft: 36,
+      paddingRight: 36,
       fontFamily: fonts.regular,
       fontSize: 9,
       color: '#1a1a1a',
-      lineHeight: 1.25,
+      lineHeight: 1.3,
     },
     header: {
       marginBottom: 8,
@@ -51,8 +51,8 @@ const createStyles = (accentColor, fonts) =>
       paddingBottom: 2,
       borderBottomWidth: 1.5,
       borderBottomColor: accentColor,
-      marginBottom: 4,
-      marginTop: 6,
+      marginBottom: 5,
+      marginTop: 7,
     },
     entryRow: {
       flexDirection: 'row',
@@ -80,13 +80,13 @@ const createStyles = (accentColor, fonts) =>
     entryDesc: {
       fontSize: 8.5,
       color: '#444',
-      marginTop: 2,
-      marginBottom: 2,
-      lineHeight: 1.25,
+      marginTop: 1,
+      marginBottom: 3,
+      lineHeight: 1.3,
     },
     skillRow: {
       flexDirection: 'row',
-      marginBottom: 1,
+      marginBottom: 2,
     },
     skillCategory: {
       fontSize: 9,
@@ -121,7 +121,7 @@ const createStyles = (accentColor, fonts) =>
       fontSize: 8,
     },
     entry: {
-      marginBottom: 3,
+      marginBottom: 4,
     },
   });
 

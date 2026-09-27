@@ -10,14 +10,14 @@ const createStyles = (accentColor, fonts) =>
       fontFamily: fonts.regular,
       fontSize: 9,
       color: '#1a1a1a',
-      lineHeight: 1.25,
+      lineHeight: 1.3,
     },
     headerBg: {
       backgroundColor: accentColor,
       paddingTop: 22,
       paddingBottom: 14,
-      paddingLeft: 40,
-      paddingRight: 40,
+      paddingLeft: 36,
+      paddingRight: 36,
       marginBottom: 8,
     },
     name: {
@@ -45,9 +45,9 @@ const createStyles = (accentColor, fonts) =>
     },
     body: {
       paddingTop: 0,
-      paddingBottom: 28,
-      paddingLeft: 40,
-      paddingRight: 40,
+      paddingBottom: 20,
+      paddingLeft: 36,
+      paddingRight: 36,
     },
     sectionTitle: {
       fontSize: 10,
@@ -58,8 +58,8 @@ const createStyles = (accentColor, fonts) =>
       paddingBottom: 2,
       borderBottomWidth: 2,
       borderBottomColor: accentColor,
-      marginBottom: 4,
-      marginTop: 6,
+      marginBottom: 5,
+      marginTop: 7,
     },
     entryRow: {
       flexDirection: 'row',
@@ -87,13 +87,13 @@ const createStyles = (accentColor, fonts) =>
     entryDesc: {
       fontSize: 8.5,
       color: '#444',
-      marginTop: 2,
-      marginBottom: 2,
-      lineHeight: 1.25,
+      marginTop: 1,
+      marginBottom: 3,
+      lineHeight: 1.3,
     },
     skillRow: {
       flexDirection: 'row',
-      marginBottom: 1,
+      marginBottom: 2,
     },
     skillCategory: {
       fontSize: 9,
@@ -126,7 +126,7 @@ const createStyles = (accentColor, fonts) =>
       fontSize: 8,
     },
     entry: {
-      marginBottom: 3,
+      marginBottom: 4,
     },
   });
 
