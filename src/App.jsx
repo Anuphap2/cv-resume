@@ -59,7 +59,33 @@ const FormWizard = lazy(() => import('./components/FormWizard'));
 const StudentInternshipWizard = lazy(() => import('./components/StudentInternshipWizard'));
 
 const DRAFT_STORAGE_KEY = 'cv-resume-local-draft-v1';
+const LEGACY_DRAFT_BACKUP_KEY = 'cv-resume-local-draft-v1-backup';
+const DOCUMENT_DRAFT_STORAGE_KEYS = {
+  resume: 'cv-resume-resume-draft-v1',
+  cv: 'cv-resume-cv-draft-v1',
+  portfolio: 'cv-resume-portfolio-draft-v1',
+};
 const STUDENT_DRAFT_STORAGE_KEY = 'cv-resume-student-internship-draft-v1';
+
+const migrateLegacyDraft = () => {
+  try {
+    const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
+    if (!raw) return;
+
+    const saved = JSON.parse(raw);
+    const targetKey = DOCUMENT_DRAFT_STORAGE_KEYS[saved?.type];
+    if (!targetKey) return;
+
+    if (!localStorage.getItem(targetKey)) {
+      localStorage.setItem(targetKey, raw);
+    } else if (!localStorage.getItem(LEGACY_DRAFT_BACKUP_KEY)) {
+      localStorage.setItem(LEGACY_DRAFT_BACKUP_KEY, raw);
+    }
+    localStorage.removeItem(DRAFT_STORAGE_KEY);
+  } catch (error) {
+    console.warn('Legacy draft could not be migrated:', error);
+  }
+};
 
 const defaultStudentInternshipData = () => ({
   personal: {
@@ -96,7 +122,8 @@ const createDocumentDraft = (data, activeVersion = 'th') => ({
 
 const readVersionedDraft = (type, fallback) => {
   try {
-    const saved = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || 'null');
+    migrateLegacyDraft();
+    const saved = JSON.parse(localStorage.getItem(DOCUMENT_DRAFT_STORAGE_KEYS[type]) || 'null');
     if (saved?.type !== type) return createDocumentDraft(fallback);
 
     const thaiData = saved.versions?.th || saved.data || fallback;
@@ -115,7 +142,8 @@ const readVersionedDraft = (type, fallback) => {
 
 const readDraft = (type, fallback) => {
   try {
-    const saved = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || 'null');
+    migrateLegacyDraft();
+    const saved = JSON.parse(localStorage.getItem(DOCUMENT_DRAFT_STORAGE_KEYS[type]) || 'null');
     return saved?.type === type && saved.data ? saved.data : structuredClone(fallback);
   } catch {
     return structuredClone(fallback);
@@ -156,11 +184,11 @@ export default function App() {
       if (docType === 'studentInternship') {
         localStorage.setItem(STUDENT_DRAFT_STORAGE_KEY, JSON.stringify(studentData));
       } else if (docType === 'resume') {
-        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ type: docType, ...resumeDraft }));
+        localStorage.setItem(DOCUMENT_DRAFT_STORAGE_KEYS.resume, JSON.stringify({ type: docType, ...resumeDraft }));
       } else if (docType === 'cv') {
-        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ type: docType, ...cvDraft }));
+        localStorage.setItem(DOCUMENT_DRAFT_STORAGE_KEYS.cv, JSON.stringify({ type: docType, ...cvDraft }));
       } else {
-        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ type: docType, data: getData() }));
+        localStorage.setItem(DOCUMENT_DRAFT_STORAGE_KEYS.portfolio, JSON.stringify({ type: docType, data: getData() }));
       }
     } catch (error) {
       console.warn('Local draft could not be saved:', error);
@@ -183,7 +211,7 @@ export default function App() {
       return;
     }
     try {
-      localStorage.removeItem(DRAFT_STORAGE_KEY);
+      localStorage.removeItem(DOCUMENT_DRAFT_STORAGE_KEYS[docType]);
     } catch {
       // Ignore storage errors and still reset the in-memory form.
     }

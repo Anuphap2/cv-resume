@@ -6,7 +6,7 @@
 
 - Primary components: React/Vite single-page app; independent `FormWizard` and `StudentInternshipWizard` flows; React PDF renderer for generated CV pages.
 - External systems:
-- Data ownership: Resume and CV drafts use `cv-resume-local-draft-v1` with separate Thai and English content versions. Existing single-version resume/CV drafts are copied into both versions on first load. Portfolio drafts use the same storage key in the existing single-document format. Student internship form uses `cv-resume-student-internship-draft-v1`. Student transcript/certificate PDF blobs use IndexedDB database `cv-resume-student-attachments-v1`.
+- Data ownership: Resume, CV, and portfolio drafts use separate localStorage keys. Resume and CV keep independent Thai and English content versions; legacy single-document drafts migrate to their matching key, with old resume/CV data copied into both versions when needed. Student internship form uses `cv-resume-student-internship-draft-v1`. Student transcript/certificate PDF blobs use IndexedDB database `cv-resume-student-attachments-v1`.
 - Critical interfaces: Student export generates a one-page CV, then uses pdf-lib to append Thai transcript, optional English transcript, and certificates in that order.
 
 ## Invariants and Constraints
