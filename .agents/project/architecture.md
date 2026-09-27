@@ -12,7 +12,7 @@
 ## Invariants and Constraints
 
 - Resetting the student internship workflow must never remove or overwrite the existing resume/CV/portfolio draft key.
-- UI font assets are bundled locally. PDF typography is kept independent from the web UI font.
+- UI font assets are bundled locally. Resume and CV PDFs use static Anuphan weights to match the UI and retain Thai glyphs; the student internship document keeps Sarabun for its university-form layout.
 
 ## Architecture Decisions
 
@@ -21,6 +21,7 @@
 | Keep internship data in a separate localStorage key and PDF blobs in IndexedDB | Preserve existing user drafts and avoid placing large files in localStorage | Separate persistence layers require handling missing or unavailable attachment records | Existing drafts remain isolated; exports validate attachment availability | 2026-09-26 |
 | Bundle Anuphan for the web UI and Sarabun for PDF output | Thai UI readability and university-form document typography have separate needs | Two font families add assets and license files | Font roles are explicit and each family is self-hosted | 2026-09-26 |
 | Keep Thai and English resume/CV content in independent versions | Users need localized documents without automatic translation overwriting original wording | Content must be translated or entered separately by the user | The active version controls preview and PDF language while existing single-version drafts seed both versions | 2026-09-27 |
+| Use static Anuphan weights in resume and CV PDFs | The UI uses Anuphan and exported documents should match it; PDF rendering does not reliably support variable font files | Separate regular and bold font files are embedded for PDF output | Resume and CV exports match the UI font and retain Thai glyph support | 2026-09-27 |
 
 ## Change Guidance
 

@@ -47,7 +47,7 @@ const createStyles = (accentColor, fonts) =>
       fontFamily: fonts.bold,
       color: accentColor,
       textTransform: 'uppercase',
-      letterSpacing: fonts.regular === 'Sarabun' ? 0 : 1,
+      letterSpacing: fonts.isThai ? 0 : 1,
       paddingBottom: 2,
       borderBottomWidth: 1.5,
       borderBottomColor: accentColor,
@@ -67,7 +67,6 @@ const createStyles = (accentColor, fonts) =>
     entrySubtitle: {
       fontSize: 9,
       color: '#555',
-      fontStyle: 'italic',
     },
     entryDate: {
       fontSize: 8,
