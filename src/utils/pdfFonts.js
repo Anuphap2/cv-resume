@@ -12,6 +12,15 @@ Font.register({ family: 'SarabunBold', src: SarabunBold });
 Font.register({ family: 'Anuphan', src: AnuphanRegular, fontWeight: 400 });
 Font.register({ family: 'AnuphanBold', src: AnuphanBold });
 
+export const normalizeThaiPdfText = (value) => (
+  typeof value === 'string' ? value.replaceAll('\u0E33', '\u0E4D\u0E32') : value
+);
+
+Font.registerHyphenationCallback((word, hyphenate) => {
+  const normalized = normalizeThaiPdfText(word);
+  return typeof hyphenate === 'function' ? hyphenate(normalized) : [normalized];
+});
+
 export const getPdfFonts = (language) => ({
   regular: 'Anuphan',
   bold: 'AnuphanBold',

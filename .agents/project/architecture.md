@@ -22,6 +22,7 @@
 | Bundle Anuphan for the web UI and Sarabun for PDF output | Thai UI readability and university-form document typography have separate needs | Two font families add assets and license files | Font roles are explicit and each family is self-hosted | 2026-09-26 |
 | Keep Thai and English resume/CV content in independent versions | Users need localized documents without automatic translation overwriting original wording | Content must be translated or entered separately by the user | The active version controls preview and PDF language while existing single-version drafts seed both versions | 2026-09-27 |
 | Use static Anuphan weights in resume and CV PDFs | The UI uses Anuphan and exported documents should match it; PDF rendering does not reliably support variable font files | Separate regular and bold font files are embedded for PDF output | Resume and CV exports match the UI font and retain Thai glyph support | 2026-09-27 |
+| Decompose Thai Sara Am (`U+0E33` -> `U+0E4D U+0E32`) in `@react-pdf/renderer` hyphenation callback | OpenType `ccmp` in Anuphan and Sarabun expands `U+0E33` into 2 glyphs while `@react-pdf/textkit` skips Thai in NFD decomposition, causing line-slice index offset to truncate trailing characters in lines containing `ำ` | `pdfFonts.js` registers a hyphenation callback that normalizes `U+0E33` before glyph generation | Thai headings (`ประสบการณ์ทำงาน`) and body lines containing `ำ` render all trailing characters across Resume, CV, and Student Internship PDFs | 2026-11-09 |
 
 ## Change Guidance
 

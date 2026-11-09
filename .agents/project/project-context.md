@@ -7,7 +7,7 @@
 - Stack markers: Node.js / JavaScript
 - Package name: cv-resume
 - Package manager lockfile: package-lock.json
-- Available package scripts: dev, build, preview
+- Available package scripts: dev, build, preview, test
 
 ## Agent Instructions
 
